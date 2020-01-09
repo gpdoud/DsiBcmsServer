@@ -34,6 +34,7 @@ namespace DsiBcmsServer {
             connStrKey = "DevDb";
 #endif
             services.AddDbContext<DsiBcmsContext>(x => {
+                x.UseLazyLoadingProxies();
                 x.UseSqlServer(Configuration.GetConnectionString(connStrKey));
             });
             services.AddCors(x =>

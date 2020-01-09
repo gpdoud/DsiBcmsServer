@@ -13,6 +13,16 @@
     <Compile Remove="Migrations\20200109121700_init.Designer.cs" />
     <Compile Remove="Migrations\20200109121758_init.cs" />
     <Compile Remove="Migrations\20200109121758_init.Designer.cs" />
+    <Compile Remove="Migrations\20200109121840_init.cs" />
+    <Compile Remove="Migrations\20200109121840_init.Designer.cs" />
+    <Compile Remove="Migrations\20200109125411_add-user.cs" />
+    <Compile Remove="Migrations\20200109125411_add-user.Designer.cs" />
+    <Compile Remove="Migrations\20200109161535_add-role.cs" />
+    <Compile Remove="Migrations\20200109161535_add-role.Designer.cs" />
+    <Compile Remove="Migrations\20200109161646_add-role.cs" />
+    <Compile Remove="Migrations\20200109161646_add-role.Designer.cs" />
+    <Compile Remove="Migrations\20200109162202_init.cs" />
+    <Compile Remove="Migrations\20200109162202_init.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="microsoft.entityframeworkcore.proxies" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0" />
     <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="3.0.0" />
     <PackageReference Include="microsoft.entityframeworkcore.tools" Version="3.0.0">

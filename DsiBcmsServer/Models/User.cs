@@ -14,10 +14,13 @@ namespace DSI.BcmsServer.Models {
         public string Email { get; set; }
         public string CellPhone { get; set; }
         public string WorkPhone { get; set; }
+        public string RoleCode { get; set; }
 
         public bool Active { get; set; } = true;
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
+
+        public virtual Role Role { get; set; }
 
         public User() { }
     }

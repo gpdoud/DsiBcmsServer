@@ -19,6 +19,42 @@ namespace DSI.BcmsServer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("DSI.BcmsServer.Models.Role", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsInstructor")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsStaff")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Code");
+
+                    b.HasIndex("Code");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("DSI.BcmsServer.Models.SystemControl", b =>
                 {
                     b.Property<string>("Key")
@@ -85,6 +121,10 @@ namespace DSI.BcmsServer.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
+                    b.Property<string>("RoleCode")
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
@@ -99,10 +139,20 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleCode");
+
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DSI.BcmsServer.Models.User", b =>
+                {
+                    b.HasOne("DSI.BcmsServer.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleCode")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 #pragma warning restore 612, 618
         }
