@@ -10,7 +10,7 @@ namespace DSI.BcmsServer.Models {
         public string Key { get; set; }
         public string Value { get; set; }
         public string Category { get; set; }
-        public bool Active { get; set; }
+        public bool Active { get; set; } = true;
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
 

@@ -14,7 +14,7 @@ namespace DSI.BcmsServer.Migrations
                     Key = table.Column<string>(maxLength: 50, nullable: false),
                     Value = table.Column<string>(maxLength: 80, nullable: true),
                     Category = table.Column<string>(maxLength: 30, nullable: true),
-                    Active = table.Column<bool>(nullable: false, defaultValue: true),
+                    Active = table.Column<bool>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Updated = table.Column<DateTime>(nullable: true)
                 },

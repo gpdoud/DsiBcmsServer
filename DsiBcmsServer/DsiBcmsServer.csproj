@@ -7,10 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200108191207_init.cs" />
+    <Compile Remove="Migrations\20200108191207_init.Designer.cs" />
+    <Compile Remove="Migrations\20200109121700_init.cs" />
+    <Compile Remove="Migrations\20200109121700_init.Designer.cs" />
+    <Compile Remove="Migrations\20200109121758_init.cs" />
+    <Compile Remove="Migrations\20200109121758_init.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="bin\Debug\netcoreapp3.0\logs\nlog.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0" />
     <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="3.0.0" />
     <PackageReference Include="microsoft.entityframeworkcore.tools" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DSI.BcmsServer.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DSI.BcmsServer.Controllers {
 
@@ -27,47 +28,37 @@ namespace DSI.BcmsServer.Controllers {
             return new OkObjectResult(sysctrl);
         }
 
-        [HttpPost("{key}/{value}")]
-        public async Task<IActionResult> SetKey(string key, string value, string category = null) {
-            logger.Trace($"key = {key}, value = {value}, category = {category}");
+        [HttpPost()]
+        public async Task<IActionResult> AddUpdateKey(SystemControl sysctrl) {
+            logger.Trace($"sysctrl = {sysctrl}");
             try {
                 // if key exists, update it
-                var sysctrl = await _context.SysCtrls.FindAsync(key);
-                if(sysctrl == null) { // doesn't exist; add it
-                    var sc = new SystemControl {
-                        Key = key,
-                        Value = value,
-                        Category = category,
-                        Active = true
-                    };
-                    _context.SysCtrls.Add(sc);
+                var sc = await _context.SysCtrls.FindAsync(sysctrl.Key);
+                if(sc == null) { // doesn't exist; add it
+                    logger.Trace($"Adding new key {sysctrl.Key}");
+                    sysctrl.Created = DateTime.Now.ToUniversalTime();
+                    _context.SysCtrls.Add(sysctrl);
                     await _context.SaveChangesAsync();
                     return new OkObjectResult(sc);
                 }
                 // else add the key/value
-                sysctrl.Value = value;
-                sysctrl.Updated = DateTime.Now;
+                logger.Trace($"Updating key {sysctrl.Key}");
+                sc.Value = sysctrl.Value;
+                sc.Category = sysctrl.Category;
+                sc.Active = sysctrl.Active;
+                sc.Updated = DateTime.Now.ToUniversalTime();
                 await _context.SaveChangesAsync();
-                return new OkObjectResult(sysctrl);
+                return new OkObjectResult(sc);
             } catch(Exception ex) {
                 return new JsonResult(ex);
             }
         }
 
         [HttpGet("/")]
-        public IActionResult GetStatus() {
+        public async Task<IActionResult> GetStatus() {
             try {
-                var msg = new {
-                    Name = $"Boot Camp Management System (BCMS)",
-                    Version = "0.0",
-                    Author = "Doud Systems",
-                    State = "ALPHA",
-                    DateTime = $"{DateTime.Now}",
-                    Status = 200,
-                    Result = "Ok"
-                };
-                logger.Trace(msg);
-                return new JsonResult(msg, jsonOptions);
+                var sysctrls = await _context.SysCtrls.Where(x => x.Category.Equals("system")).ToArrayAsync();
+                return new JsonResult(sysctrls, jsonOptions);
             } catch(Exception ex) {
                 return new JsonResult(ex);
             }
