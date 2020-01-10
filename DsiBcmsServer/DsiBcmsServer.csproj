@@ -23,6 +23,18 @@
     <Compile Remove="Migrations\20200109161646_add-role.Designer.cs" />
     <Compile Remove="Migrations\20200109162202_init.cs" />
     <Compile Remove="Migrations\20200109162202_init.Designer.cs" />
+    <Compile Remove="Migrations\20200109184741_init.cs" />
+    <Compile Remove="Migrations\20200109184741_init.Designer.cs" />
+    <Compile Remove="Migrations\20200110042620_init.cs" />
+    <Compile Remove="Migrations\20200110042620_init.Designer.cs" />
+    <Compile Remove="Migrations\20200110050935_add-cohort-enrollment.cs" />
+    <Compile Remove="Migrations\20200110050935_add-cohort-enrollment.Designer.cs" />
+    <Compile Remove="Migrations\20200110152351_init.cs" />
+    <Compile Remove="Migrations\20200110152351_init.Designer.cs" />
+    <Compile Remove="Migrations\20200110231302_add-instructor-to-cohort.cs" />
+    <Compile Remove="Migrations\20200110231302_add-instructor-to-cohort.Designer.cs" />
+    <Compile Remove="Migrations\20200110233600_add-cohort-begin-end-dates.cs" />
+    <Compile Remove="Migrations\20200110233600_add-cohort-begin-end-dates.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

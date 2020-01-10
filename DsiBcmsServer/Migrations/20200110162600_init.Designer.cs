@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DSI.BcmsServer.Migrations
 {
     [DbContext(typeof(DsiBcmsContext))]
-    [Migration("20200109184741_init")]
+    [Migration("20200110162600_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,11 +21,88 @@ namespace DSI.BcmsServer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("DSI.BcmsServer.Models.Cohort", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cohorts");
+                });
+
+            modelBuilder.Entity("DSI.BcmsServer.Models.Config", b =>
+                {
+                    b.Property<string>("KeyValue")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DataValue")
+                        .HasColumnType("nvarchar(80)")
+                        .HasMaxLength(80);
+
+                    b.Property<bool>("System")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("KeyValue");
+
+                    b.HasIndex("KeyValue")
+                        .IsUnique();
+
+                    b.ToTable("Configs");
+                });
+
+            modelBuilder.Entity("DSI.BcmsServer.Models.Enrollment", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CohortId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "CohortId");
+
+                    b.HasIndex("CohortId");
+
+                    b.ToTable("Enrollments");
+                });
+
             modelBuilder.Entity("DSI.BcmsServer.Models.Role", b =>
                 {
                     b.Property<string>("Code")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasColumnType("nvarchar(8)")
+                        .HasMaxLength(8);
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
@@ -42,6 +119,9 @@ namespace DSI.BcmsServer.Migrations
                     b.Property<bool>("IsStaff")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsStudent")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(30)")
@@ -55,37 +135,6 @@ namespace DSI.BcmsServer.Migrations
                     b.HasIndex("Code");
 
                     b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("DSI.BcmsServer.Models.SystemControl", b =>
-                {
-                    b.Property<string>("Key")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(80)")
-                        .HasMaxLength(80);
-
-                    b.HasKey("Key");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
-
-                    b.ToTable("SysCtrls");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.User", b =>
@@ -124,8 +173,8 @@ namespace DSI.BcmsServer.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("RoleCode")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasColumnType("nvarchar(8)")
+                        .HasMaxLength(8);
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
@@ -147,6 +196,21 @@ namespace DSI.BcmsServer.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DSI.BcmsServer.Models.Enrollment", b =>
+                {
+                    b.HasOne("DSI.BcmsServer.Models.Cohort", "Cohort")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("CohortId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DSI.BcmsServer.Models.User", "User")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.User", b =>

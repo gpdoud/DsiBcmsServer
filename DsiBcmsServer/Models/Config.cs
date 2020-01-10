@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace DSI.BcmsServer.Models {
 
-    public class SystemControl {
+    public class Config {
 
-        public string Key { get; set; }
-        public string Value { get; set; }
-        public string Category { get; set; }
+        public string KeyValue { get; set; }
+        public string DataValue { get; set; }
+        public bool System { get; set; } = false;
         public bool Active { get; set; } = true;
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
 
-        public SystemControl() {}
+        public Config() {}
     }
 }

@@ -12,39 +12,39 @@ namespace DSI.BcmsServer.Controllers {
 
     [Route("dsi/sys")]
     [ApiController]
-    public class SystemController : ControllerBase {
+    public class ConfigsController : ControllerBase {
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         private DsiBcmsContext _context = null;
-        public SystemController(DsiBcmsContext context) { _context = context; }
+        public ConfigsController(DsiBcmsContext context) { _context = context; }
         private JsonSerializerOptions jsonOptions = new JsonSerializerOptions { WriteIndented = true };
 
         [HttpGet("{key}")]
-        public async Task<ActionResult<SystemControl>> GetKey(string key) {
+        public async Task<ActionResult<Config>> GetKey(string key) {
             logger.Trace($"key = {key}");
-            var sysctrl = await _context.SysCtrls.FindAsync(key);
+            var sysctrl = await _context.Configs.FindAsync(key);
             if(sysctrl == null) return new NotFoundResult();
             return new OkObjectResult(sysctrl);
         }
 
         [HttpPost()]
-        public async Task<IActionResult> AddUpdateKey(SystemControl sysctrl) {
+        public async Task<IActionResult> AddUpdateKey(Config sysctrl) {
             logger.Trace($"sysctrl = {sysctrl}");
             try {
                 // if key exists, update it
-                var sc = await _context.SysCtrls.FindAsync(sysctrl.Key);
+                var sc = await _context.Configs.FindAsync(sysctrl.KeyValue);
                 if(sc == null) { // doesn't exist; add it
-                    logger.Trace($"Adding new key {sysctrl.Key}");
+                    logger.Trace($"Adding new key {sysctrl.KeyValue}");
                     sysctrl.Created = DateTime.Now.ToUniversalTime();
-                    _context.SysCtrls.Add(sysctrl);
+                    _context.Configs.Add(sysctrl);
                     await _context.SaveChangesAsync();
                     return new OkObjectResult(sc);
                 }
                 // else add the key/value
-                logger.Trace($"Updating key {sysctrl.Key}");
-                sc.Value = sysctrl.Value;
-                sc.Category = sysctrl.Category;
+                logger.Trace($"Updating key {sysctrl.KeyValue}");
+                sc.DataValue = sysctrl.DataValue;
+                sc.System = sysctrl.System;
                 sc.Active = sysctrl.Active;
                 sc.Updated = DateTime.Now.ToUniversalTime();
                 await _context.SaveChangesAsync();
@@ -57,8 +57,8 @@ namespace DSI.BcmsServer.Controllers {
         [HttpGet("/")]
         public async Task<IActionResult> GetStatus() {
             try {
-                var sysctrls = await _context.SysCtrls.Where(x => x.Category.Equals("system")).ToArrayAsync();
-                return new JsonResult(sysctrls, jsonOptions);
+                var Configs = await _context.Configs.Where(x => x.System).ToArrayAsync();
+                return new JsonResult(Configs, jsonOptions);
             } catch(Exception ex) {
                 return new JsonResult(ex);
             }

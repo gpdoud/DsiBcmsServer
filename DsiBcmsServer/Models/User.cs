@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DSI.BcmsServer.Models {
@@ -15,12 +16,16 @@ namespace DSI.BcmsServer.Models {
         public string CellPhone { get; set; }
         public string WorkPhone { get; set; }
         public string RoleCode { get; set; }
+        public string SecurityKey { get; set; }
 
         public bool Active { get; set; } = true;
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
 
         public virtual Role Role { get; set; }
+        public virtual IEnumerable<Enrollment> Enrollments { get; set; }
+        [JsonIgnore]
+        public virtual IEnumerable<Cohort> Cohorts { get; set; }
 
         public User() { }
     }
