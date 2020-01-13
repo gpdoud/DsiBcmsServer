@@ -23,6 +23,7 @@ namespace DSI.BcmsServer.Models {
         public DateTime? Updated { get; set; }
 
         public virtual Role Role { get; set; }
+        [JsonIgnore]
         public virtual IEnumerable<Enrollment> Enrollments { get; set; }
         [JsonIgnore]
         public virtual IEnumerable<Cohort> Cohorts { get; set; }

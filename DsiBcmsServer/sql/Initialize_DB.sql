@@ -43,3 +43,7 @@ insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, Wo
 insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, Active, Created)
 	values ('sblessing', 'MaxPass@8888', 'Sean', 'Blessing', 'sblessing@maxtrain.com', null, '513-322-8888', 'INS', 1, GetDate());
 select * from Users;
+
+insert into Cohorts ([Name], [BeginDate], [EndDate], [Capacity], InstructorId, Active, Created)
+	values ('C#BC/9 Jan28-Apr10 2020', '2020-01-28', '2020-04-10', 12, 1, 1, '2020-01-10');
+select * from Cohorts;

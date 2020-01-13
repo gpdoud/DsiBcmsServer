@@ -18,7 +18,7 @@ namespace DSI.BcmsServer.Models {
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         
-        [JsonIgnore]
+        //[JsonIgnore]
         public virtual IEnumerable<Enrollment> Enrollments { get; set; }
         public virtual User Instructor { get; set; }
 

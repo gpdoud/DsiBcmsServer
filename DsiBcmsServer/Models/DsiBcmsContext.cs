@@ -11,7 +11,11 @@ namespace DSI.BcmsServer.Models {
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public virtual DbSet<Config> Configs { get; set; }
+        public DbSet<Config> Configs { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<Cohort> Cohort { get; set; }
+        public DbSet<Enrollment> Enrollment { get; set; }
 
         public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {}
 
@@ -81,10 +85,5 @@ namespace DSI.BcmsServer.Models {
             });
         }
 
-        public DbSet<DSI.BcmsServer.Models.User> User { get; set; }
-
-        public DbSet<DSI.BcmsServer.Models.Role> Role { get; set; }
-
-        public DbSet<DSI.BcmsServer.Models.Cohort> Cohort { get; set; }
     }
 }

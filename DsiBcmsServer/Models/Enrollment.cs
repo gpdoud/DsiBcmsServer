@@ -10,8 +10,9 @@ namespace DSI.BcmsServer.Models {
         public int UserId { get; set; }
         public int CohortId { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public virtual User User { get; set; }
+        [JsonIgnore]
         public virtual Cohort Cohort { get; set; }
 
         public Enrollment() { }

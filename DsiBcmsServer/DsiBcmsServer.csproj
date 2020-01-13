@@ -42,10 +42,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="microsoft.entityframeworkcore.proxies" Version="3.0.0" />
+    <PackageReference Include="microsoft.entityframeworkcore.proxies" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0" />
-    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="3.0.0" />
-    <PackageReference Include="microsoft.entityframeworkcore.tools" Version="3.0.0">
+    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="3.1.0" />
+    <PackageReference Include="microsoft.entityframeworkcore.tools" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
