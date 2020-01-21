@@ -51,7 +51,7 @@ namespace DsiBcmsServer {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseCors(DefaultCorsPolicy);
 
