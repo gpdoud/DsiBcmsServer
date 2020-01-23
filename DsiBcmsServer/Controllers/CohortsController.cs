@@ -20,13 +20,13 @@ namespace DSI.BcmsServer.Controllers {
         // GET: api/Cohorts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cohort>>> GetCohort() {
-            return await _context.Cohort.ToListAsync();
+            return await _context.Cohorts.ToListAsync();
         }
 
         // GET: api/Cohorts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cohort>> GetCohort(int id) {
-            var cohort = await _context.Cohort.FindAsync(id);
+            var cohort = await _context.Cohorts.FindAsync(id);
 
             if(cohort == null) {
                 return NotFound();
@@ -64,7 +64,7 @@ namespace DSI.BcmsServer.Controllers {
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<Cohort>> PostCohort(Cohort cohort) {
-            _context.Cohort.Add(cohort);
+            _context.Cohorts.Add(cohort);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCohort", new { id = cohort.Id }, cohort);
@@ -73,19 +73,19 @@ namespace DSI.BcmsServer.Controllers {
         // DELETE: api/Cohorts/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Cohort>> DeleteCohort(int id) {
-            var cohort = await _context.Cohort.FindAsync(id);
+            var cohort = await _context.Cohorts.FindAsync(id);
             if(cohort == null) {
                 return NotFound();
             }
 
-            _context.Cohort.Remove(cohort);
+            _context.Cohorts.Remove(cohort);
             await _context.SaveChangesAsync();
 
             return cohort;
         }
 
         private bool CohortExists(int id) {
-            return _context.Cohort.Any(e => e.Id == id);
+            return _context.Cohorts.Any(e => e.Id == id);
         }
     }
 }

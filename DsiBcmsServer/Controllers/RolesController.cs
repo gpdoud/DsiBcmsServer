@@ -9,7 +9,7 @@ using DSI.BcmsServer.Models;
 
 namespace DSI.BcmsServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("dsi/[controller]")]
     [ApiController]
     public class RolesController : ControllerBase
     {
@@ -24,14 +24,14 @@ namespace DSI.BcmsServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Role>>> GetRole()
         {
-            return await _context.Role.ToListAsync();
+            return await _context.Roles.ToListAsync();
         }
 
         // GET: api/Roles/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Role>> GetRole(string id)
         {
-            var role = await _context.Role.FindAsync(id);
+            var role = await _context.Roles.FindAsync(id);
 
             if (role == null)
             {
@@ -79,7 +79,7 @@ namespace DSI.BcmsServer.Controllers
         [HttpPost]
         public async Task<ActionResult<Role>> PostRole(Role role)
         {
-            _context.Role.Add(role);
+            _context.Roles.Add(role);
             try
             {
                 await _context.SaveChangesAsync();
@@ -103,13 +103,13 @@ namespace DSI.BcmsServer.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Role>> DeleteRole(string id)
         {
-            var role = await _context.Role.FindAsync(id);
+            var role = await _context.Roles.FindAsync(id);
             if (role == null)
             {
                 return NotFound();
             }
 
-            _context.Role.Remove(role);
+            _context.Roles.Remove(role);
             await _context.SaveChangesAsync();
 
             return role;
@@ -117,7 +117,7 @@ namespace DSI.BcmsServer.Controllers
 
         private bool RoleExists(string id)
         {
-            return _context.Role.Any(e => e.Code == id);
+            return _context.Roles.Any(e => e.Code == id);
         }
     }
 }

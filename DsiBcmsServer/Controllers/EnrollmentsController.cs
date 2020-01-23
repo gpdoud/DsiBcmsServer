@@ -24,14 +24,14 @@ namespace DSI.BcmsServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Enrollment>>> GetEnrollment()
         {
-            return await _context.Enrollment.ToListAsync();
+            return await _context.Enrollments.ToListAsync();
         }
 
         // GET: api/Enrollments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Enrollment>> GetEnrollment(int id)
         {
-            var enrollment = await _context.Enrollment.FindAsync(id);
+            var enrollment = await _context.Enrollments.FindAsync(id);
 
             if (enrollment == null)
             {
@@ -79,7 +79,7 @@ namespace DSI.BcmsServer.Controllers
         [HttpPost]
         public async Task<ActionResult<Enrollment>> PostEnrollment(Enrollment enrollment)
         {
-            _context.Enrollment.Add(enrollment);
+            _context.Enrollments.Add(enrollment);
             try
             {
                 await _context.SaveChangesAsync();
@@ -103,13 +103,13 @@ namespace DSI.BcmsServer.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Enrollment>> DeleteEnrollment(int id)
         {
-            var enrollment = await _context.Enrollment.FindAsync(id);
+            var enrollment = await _context.Enrollments.FindAsync(id);
             if (enrollment == null)
             {
                 return NotFound();
             }
 
-            _context.Enrollment.Remove(enrollment);
+            _context.Enrollments.Remove(enrollment);
             await _context.SaveChangesAsync();
 
             return enrollment;
@@ -117,7 +117,7 @@ namespace DSI.BcmsServer.Controllers
 
         private bool EnrollmentExists(int id)
         {
-            return _context.Enrollment.Any(e => e.UserId == id);
+            return _context.Enrollments.Any(e => e.UserId == id);
         }
     }
 }

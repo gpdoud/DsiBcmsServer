@@ -12,10 +12,10 @@ namespace DSI.BcmsServer.Models {
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public DbSet<Config> Configs { get; set; }
-        public DbSet<User> User { get; set; }
-        public DbSet<Role> Role { get; set; }
-        public DbSet<Cohort> Cohort { get; set; }
-        public DbSet<Enrollment> Enrollment { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Cohort> Cohorts { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
 
         public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {}
 
@@ -53,6 +53,7 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.Password).HasMaxLength(50).IsRequired();
                 e.Property(x => x.Firstname).HasMaxLength(30).IsRequired();
                 e.Property(x => x.Lastname).HasMaxLength(30).IsRequired();
+                e.Property(x => x.Email).HasMaxLength(80);
                 e.Property(x => x.CellPhone).HasMaxLength(12);
                 e.Property(x => x.WorkPhone).HasMaxLength(12);
                 e.Property(x => x.RoleCode).HasMaxLength(8);
