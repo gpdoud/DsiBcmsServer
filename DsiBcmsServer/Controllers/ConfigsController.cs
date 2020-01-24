@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DSI.BcmsServer.Controllers {
 
-    [Route("dsi/sys")]
+    [Route("dsi/[controller]")]
     [ApiController]
     public class ConfigsController : ControllerBase {
 
@@ -20,12 +20,22 @@ namespace DSI.BcmsServer.Controllers {
         public ConfigsController(DsiBcmsContext context) { _context = context; }
         private JsonSerializerOptions jsonOptions = new JsonSerializerOptions { WriteIndented = true };
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Config>>> GetAll() {
+            return await _context.Configs.ToListAsync();
+        }
+
         [HttpGet("{key}")]
         public async Task<ActionResult<Config>> GetKey(string key) {
             logger.Trace($"key = {key}");
             var sysctrl = await _context.Configs.FindAsync(key);
-            if(sysctrl == null) return new NotFoundResult();
+            if(sysctrl == null) return NotFound();
             return new OkObjectResult(sysctrl);
+        }
+
+        [HttpGet("{partKey}")]
+        public async Task<ActionResult<IEnumerable<Config>>> GetPartialKey(string partKey) {
+            return await _context.Configs.Where(x => x.KeyValue.StartsWith(partKey)).ToListAsync();
         }
 
         [HttpPost()]
@@ -49,6 +59,19 @@ namespace DSI.BcmsServer.Controllers {
                 sc.Updated = DateTime.Now.ToUniversalTime();
                 await _context.SaveChangesAsync();
                 return new OkObjectResult(sc);
+            } catch(Exception ex) {
+                return new JsonResult(ex);
+            }
+        }
+
+        [HttpDelete("{key}")]
+        public async Task<ActionResult<Config>> Remove(string key) {
+            try {
+                var cfg = await _context.Configs.FindAsync(key);
+                if(cfg == null) return NotFound();
+                _context.Configs.Remove(cfg);
+                await _context.SaveChangesAsync();
+                return cfg;
             } catch(Exception ex) {
                 return new JsonResult(ex);
             }
