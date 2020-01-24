@@ -37,6 +37,7 @@ namespace DSI.BcmsServer.Models {
                 e.HasKey(x => x.Code);
                 e.Property(x => x.Code).HasMaxLength(8).IsRequired();
                 e.Property(x => x.Name).HasMaxLength(30).IsRequired();
+                e.Property(x => x.IsRoot).IsRequired();
                 e.Property(x => x.IsAdmin).IsRequired();
                 e.Property(x => x.IsStaff).IsRequired();
                 e.Property(x => x.IsInstructor).IsRequired();

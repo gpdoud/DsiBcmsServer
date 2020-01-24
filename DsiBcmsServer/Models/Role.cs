@@ -9,6 +9,7 @@ namespace DSI.BcmsServer.Models {
     public class Role {
         public string Code { get; set; }
         public string Name { get; set; }
+        public bool IsRoot { get; set; } = false;
         public bool IsAdmin { get; set; } = false;
         public bool IsStaff { get; set; } = false;
         public bool IsInstructor { get; set; } = false;
