@@ -33,7 +33,7 @@ namespace DSI.BcmsServer.Controllers {
             return new OkObjectResult(sysctrl);
         }
 
-        [HttpGet("{partKey}")]
+        [HttpGet("search/{partKey}")]
         public async Task<ActionResult<IEnumerable<Config>>> GetPartialKey(string partKey) {
             return await _context.Configs.Where(x => x.KeyValue.StartsWith(partKey)).ToListAsync();
         }
