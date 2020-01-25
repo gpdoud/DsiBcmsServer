@@ -30,12 +30,24 @@ namespace DSI.BcmsServer.Controllers {
             logger.Trace($"key = {key}");
             var sysctrl = await _context.Configs.FindAsync(key);
             if(sysctrl == null) return NotFound();
-            return new OkObjectResult(sysctrl);
+            return sysctrl;
         }
 
         [HttpGet("search/{partKey}")]
         public async Task<ActionResult<IEnumerable<Config>>> GetPartialKey(string partKey) {
             return await _context.Configs.Where(x => x.KeyValue.StartsWith(partKey)).ToListAsync();
+        }
+
+        [HttpGet("keys/{keyList}")]
+        public async Task<ActionResult<IEnumerable<Config>>> GetKeys(string keyList) {
+            var keys = keyList.Split(','); // split keys with comma separator
+            var configs = new List<Config>();
+            foreach(var key in keys) {
+                var config = await GetKey(key);
+                if(config.Value == null) continue;
+                configs.Add(config.Value);
+            }
+            return configs;
         }
 
         [HttpPost()]
