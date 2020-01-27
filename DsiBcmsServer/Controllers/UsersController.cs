@@ -18,6 +18,28 @@ namespace DSI.BcmsServer.Controllers {
             _context = context;
         }
 
+        // GET: dsi/students
+        [HttpGet("students")]
+        public async Task<ActionResult<IEnumerable<User>>> GetStudents() {
+            try {
+                return await _context.Users.Where(x => x.Role.IsStudent).ToListAsync();
+            } catch(Exception ex) {
+                var message = new { message = ex.Message, exception = ex };
+                return new JsonResult(message);
+            }
+        }
+
+        // GET: dsi/instructors
+        [HttpGet("instructors")]
+        public async Task<ActionResult<IEnumerable<User>>> GetInstructors() {
+            try {
+                return await _context.Users.Where(x => x.Role.IsInstructor).ToListAsync();
+            } catch (Exception ex) {
+                var message = new { message = ex.Message, exception = ex };
+                return new JsonResult(message);
+            }
+        }
+
         // GET: dsi/login
         [HttpGet("/dsi/login/{username}/{password}")]
         public async Task<ActionResult<User>> Login(string username, string password) {
