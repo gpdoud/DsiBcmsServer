@@ -12,6 +12,7 @@ namespace DSI.BcmsServer.Models {
         public int? InstructorId { get; set; }
         public DateTime? BeginDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public DateTime? DemoDay { get; set; }
         public int Capacity { get; set; }
 
         public bool Active { get; set; } = true;

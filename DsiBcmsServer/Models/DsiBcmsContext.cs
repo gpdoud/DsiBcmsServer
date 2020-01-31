@@ -72,6 +72,7 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.InstructorId);
                 e.Property(x => x.BeginDate);
                 e.Property(x => x.EndDate);
+                e.Property(x => x.DemoDay);
                 e.Property(x => x.Capacity);
                 e.HasKey(x => x.Id);
                 e.HasOne(x => x.Instructor).WithMany(x => x.Cohorts).HasForeignKey(x => x.InstructorId).OnDelete(DeleteBehavior.NoAction);
