@@ -1,3 +1,17 @@
+create procedure GetUsersNotEnrolled
+	@cohortid int = 0
+as
+begin
+	select u.* 
+		from Users u
+		join Roles r
+			on r.Code = u.RoleCode
+		where r.IsStudent = 1
+			and id not in (
+				select UserId from Enrollments where CohortId = @cohortid
+			)
+end
+go
 insert into Configs (KeyValue, DataValue, System, Active, Created)
 	values ('name', 'Boot Camp Management System (BCMS)', 1, 1, GetDate());
 insert into Configs (KeyValue, DataValue, System, Active, Created)
@@ -53,3 +67,4 @@ select * from Users;
 insert into Cohorts ([Name], [BeginDate], [EndDate], [Capacity], InstructorId, Active, Created)
 	values ('C#BC/9 Jan28-Apr10 2020', '2020-01-28', '2020-04-10', 12, 1, 1, '2020-01-10');
 select * from Cohorts;
+go

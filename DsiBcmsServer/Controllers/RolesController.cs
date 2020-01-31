@@ -52,6 +52,7 @@ namespace DSI.BcmsServer.Controllers
                 return BadRequest();
             }
 
+            role.Updated = DateTime.Now;
             _context.Entry(role).State = EntityState.Modified;
 
             try

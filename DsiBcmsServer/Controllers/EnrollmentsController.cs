@@ -11,6 +11,8 @@ namespace DSI.BcmsServer.Controllers {
     [Route("dsi/[controller]")]
     [ApiController]
     public class EnrollmentsController : ControllerBase {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly DsiBcmsContext _context;
 
         public EnrollmentsController(DsiBcmsContext context) {
@@ -48,12 +50,13 @@ namespace DSI.BcmsServer.Controllers {
         [HttpGet("notenrolled/{cohortId}")]
         public async Task<ActionResult<IEnumerable<User>>> GetNotEnrolledByCohort(int cohortId) {
             try {
-                var sql = " select * from users "
-                            +" where RoleCode = 'stu' "
-                            +$" and id not in (select UserId from Enrollments where CohortId = {cohortId}) ";
-                return await _context.Users.FromSqlRaw(sql).ToListAsync();
+                var sql = $" exec GetUsersNotEnrolled @Cohortid = {cohortId} ";
+                return await _context.Users
+                                    .FromSqlRaw(sql)
+                                    .ToListAsync();
                 //return await _context.Users.Where(u => u.Role.IsStudent && _context.Enrollments.All(e => e.UserId != u.Id)).ToListAsync();
             } catch(Exception ex) {
+                logger.Error($"Exception:{ex.Message}", ex);
                 return new JsonResult(ex.Message, ex);
             }
         }

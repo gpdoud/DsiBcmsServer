@@ -44,6 +44,7 @@ namespace DSI.BcmsServer.Controllers {
                 return BadRequest();
             }
 
+            cohort.Updated = DateTime.Now;
             _context.Entry(cohort).State = EntityState.Modified;
 
             try {
