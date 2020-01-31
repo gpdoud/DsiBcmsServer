@@ -88,7 +88,19 @@ namespace DSI.BcmsServer.Models {
                 e.HasOne(x => x.Cohort).WithMany(x => x.Enrollments).HasForeignKey(x => x.CohortId);
                 e.HasIndex(x => new { x.UserId, x.CohortId }).IsUnique();
             });
+            builder.Entity<Attendance>(e => {
+                e.ToTable("Attendance");
+
+                e.HasKey(x => x.Id);
+                e.Property(x => x.In);
+                e.Property(x => x.Out);
+                e.Property(x => x.Excused);
+                e.Property(x => x.Note);
+                e.HasOne(x => x.Enrollment).WithMany(x => x.Attendances).HasForeignKey(x => x.EnrollmentId);
+            });
         }
+
+        public DbSet<DSI.BcmsServer.Models.Attendance> Attendance { get; set; }
 
     }
 }

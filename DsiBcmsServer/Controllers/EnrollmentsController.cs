@@ -56,7 +56,8 @@ namespace DSI.BcmsServer.Controllers {
                                     .ToListAsync();
                 //return await _context.Users.Where(u => u.Role.IsStudent && _context.Enrollments.All(e => e.UserId != u.Id)).ToListAsync();
             } catch(Exception ex) {
-                logger.Error($"Exception:{ex.Message}", ex);
+                var exceptionMessages = Utility.Exceptions.Flatten(ex);
+                logger.Error(ex, "Exceptions:{msg}", exceptionMessages);
                 return new JsonResult(ex.Message, ex);
             }
         }
