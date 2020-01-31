@@ -79,11 +79,13 @@ namespace DSI.BcmsServer.Models {
             });
             builder.Entity<Enrollment>(e => {
                 e.ToTable("Enrollments");
-                e.HasKey(x => new { x.UserId, x.CohortId } );
+
+                e.HasKey(x => x.Id );
                 e.Property(x => x.UserId).IsRequired();
                 e.Property(x => x.CohortId).IsRequired();
                 e.HasOne(x => x.User).WithMany(x => x.Enrollments).HasForeignKey(x => x.UserId);
                 e.HasOne(x => x.Cohort).WithMany(x => x.Enrollments).HasForeignKey(x => x.CohortId);
+                e.HasIndex(x => new { x.UserId, x.CohortId }).IsUnique();
             });
         }
 

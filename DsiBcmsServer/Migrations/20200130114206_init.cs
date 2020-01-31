@@ -8,24 +8,6 @@ namespace DSI.BcmsServer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cohorts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 30, nullable: false),
-                    Start = table.Column<DateTime>(nullable: false),
-                    Capacity = table.Column<int>(nullable: false),
-                    Active = table.Column<bool>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false),
-                    Updated = table.Column<DateTime>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cohorts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Configs",
                 columns: table => new
                 {
@@ -47,6 +29,7 @@ namespace DSI.BcmsServer.Migrations
                 {
                     Code = table.Column<string>(maxLength: 8, nullable: false),
                     Name = table.Column<string>(maxLength: 30, nullable: false),
+                    IsRoot = table.Column<bool>(nullable: false),
                     IsAdmin = table.Column<bool>(nullable: false),
                     IsStaff = table.Column<bool>(nullable: false),
                     IsInstructor = table.Column<bool>(nullable: false),
@@ -70,10 +53,11 @@ namespace DSI.BcmsServer.Migrations
                     Password = table.Column<string>(maxLength: 50, nullable: false),
                     Firstname = table.Column<string>(maxLength: 30, nullable: false),
                     Lastname = table.Column<string>(maxLength: 30, nullable: false),
-                    Email = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(maxLength: 80, nullable: true),
                     CellPhone = table.Column<string>(maxLength: 12, nullable: true),
                     WorkPhone = table.Column<string>(maxLength: 12, nullable: true),
                     RoleCode = table.Column<string>(maxLength: 8, nullable: true),
+                    SecurityKey = table.Column<string>(maxLength: 36, nullable: true),
                     Active = table.Column<bool>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Updated = table.Column<DateTime>(nullable: true)
@@ -90,15 +74,42 @@ namespace DSI.BcmsServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cohorts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(maxLength: 30, nullable: false),
+                    InstructorId = table.Column<int>(nullable: true),
+                    BeginDate = table.Column<DateTime>(nullable: true),
+                    EndDate = table.Column<DateTime>(nullable: true),
+                    Capacity = table.Column<int>(nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Updated = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cohorts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cohorts_Users_InstructorId",
+                        column: x => x.InstructorId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Enrollments",
                 columns: table => new
                 {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(nullable: false),
                     CohortId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Enrollments", x => new { x.UserId, x.CohortId });
+                    table.PrimaryKey("PK_Enrollments", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Enrollments_Cohorts_CohortId",
                         column: x => x.CohortId,
@@ -114,6 +125,11 @@ namespace DSI.BcmsServer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cohorts_InstructorId",
+                table: "Cohorts",
+                column: "InstructorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Configs_KeyValue",
                 table: "Configs",
                 column: "KeyValue",
@@ -123,6 +139,12 @@ namespace DSI.BcmsServer.Migrations
                 name: "IX_Enrollments_CohortId",
                 table: "Enrollments",
                 column: "CohortId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enrollments_UserId_CohortId",
+                table: "Enrollments",
+                columns: new[] { "UserId", "CohortId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_Code",

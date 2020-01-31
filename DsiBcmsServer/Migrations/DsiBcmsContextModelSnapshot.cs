@@ -91,15 +91,23 @@ namespace DSI.BcmsServer.Migrations
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Enrollment", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CohortId")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId", "CohortId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CohortId");
+
+                    b.HasIndex("UserId", "CohortId")
+                        .IsUnique();
 
                     b.ToTable("Enrollments");
                 });

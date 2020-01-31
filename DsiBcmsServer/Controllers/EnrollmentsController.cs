@@ -48,7 +48,11 @@ namespace DSI.BcmsServer.Controllers {
         [HttpGet("notenrolled/{cohortId}")]
         public async Task<ActionResult<IEnumerable<User>>> GetNotEnrolledByCohort(int cohortId) {
             try {
-                return await _context.Users.Where(u => u.Role.IsStudent && _context.Enrollments.All(e => e.UserId != u.Id)).ToListAsync();
+                var sql = " select * from users "
+                            +" where RoleCode = 'stu' "
+                            +$" and id not in (select UserId from Enrollments where CohortId = {cohortId}) ";
+                return await _context.Users.FromSqlRaw(sql).ToListAsync();
+                //return await _context.Users.Where(u => u.Role.IsStudent && _context.Enrollments.All(e => e.UserId != u.Id)).ToListAsync();
             } catch(Exception ex) {
                 return new JsonResult(ex.Message, ex);
             }
@@ -58,9 +62,9 @@ namespace DSI.BcmsServer.Controllers {
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{userId}/{cohortId}")]
-        public async Task<IActionResult> PutEnrollment(int userId, int cohortId, Enrollment enrollment) {
+        public async Task<IActionResult> PutEnrollment(int id, Enrollment enrollment) {
             try {
-                if(userId != enrollment.UserId || cohortId != enrollment.CohortId) {
+                if(id != enrollment.Id) {
                     return BadRequest();
                 }
 
@@ -69,7 +73,7 @@ namespace DSI.BcmsServer.Controllers {
                 try {
                     await _context.SaveChangesAsync();
                 } catch(DbUpdateConcurrencyException) {
-                    if(!EnrollmentExists(userId, cohortId)) {
+                    if(!EnrollmentExists(id)) {
                         return NotFound();
                     } else {
                         throw;
@@ -93,7 +97,7 @@ namespace DSI.BcmsServer.Controllers {
                 try {
                     await _context.SaveChangesAsync();
                 } catch(DbUpdateException) {
-                    if(EnrollmentExists(enrollment.UserId, enrollment.CohortId)) {
+                    if(EnrollmentExists(enrollment.Id)) {
                         return Conflict();
                     } else {
                         throw;
@@ -108,10 +112,10 @@ namespace DSI.BcmsServer.Controllers {
         }
 
         // DELETE: api/Enrollments/5
-        [HttpDelete("{userId}/{cohortId}")]
-        public async Task<ActionResult<Enrollment>> DeleteEnrollment(int userId, int cohortId) {
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Enrollment>> DeleteEnrollment(int id) {
             try {
-                var enrollment = await _context.Enrollments.FindAsync(userId, cohortId);
+                var enrollment = await _context.Enrollments.FindAsync(id);
                 if(enrollment == null) {
                     return NotFound();
                 }
@@ -126,8 +130,8 @@ namespace DSI.BcmsServer.Controllers {
 
         }
 
-        private bool EnrollmentExists(int userId, int cohortId) {
-            return _context.Enrollments.Any(e => e.UserId == userId && e.CohortId == cohortId);
+        private bool EnrollmentExists(int id) {
+            return _context.Enrollments.Any(e => e.Id == id);
         }
     }
 }

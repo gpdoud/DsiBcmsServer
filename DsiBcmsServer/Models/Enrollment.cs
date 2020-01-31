@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace DSI.BcmsServer.Models {
 
     public class Enrollment {
+        public int Id { get; set; }
         public int UserId { get; set; }
         public int CohortId { get; set; }
 

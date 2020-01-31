@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DSI.BcmsServer.Migrations
 {
     [DbContext(typeof(DsiBcmsContext))]
-    [Migration("20200110233741_add-cohort-begin-end-dates")]
-    partial class addcohortbeginenddates
+    [Migration("20200130114206_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0")
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -93,15 +93,23 @@ namespace DSI.BcmsServer.Migrations
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Enrollment", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CohortId")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId", "CohortId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CohortId");
+
+                    b.HasIndex("UserId", "CohortId")
+                        .IsUnique();
 
                     b.ToTable("Enrollments");
                 });
@@ -122,6 +130,9 @@ namespace DSI.BcmsServer.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsInstructor")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRoot")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsStaff")
@@ -163,7 +174,8 @@ namespace DSI.BcmsServer.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(80)")
+                        .HasMaxLength(80);
 
                     b.Property<string>("Firstname")
                         .IsRequired()
