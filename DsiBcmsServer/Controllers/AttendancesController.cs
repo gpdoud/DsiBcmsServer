@@ -20,7 +20,54 @@ namespace DSI.BcmsServer.Controllers {
             _context = context;
         }
 
-        // GET: api/Attendances
+        // POST: dsi/Attendances/checkin/{cohortId}/{studendId}
+        [HttpPost("checkin/{cohortId}/{studentId}")]
+        public async Task<ActionResult<Attendance>> Checkin(int cohortId, int studentId) {
+            var enrollment = await _context.Enrollments
+                             .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
+            if(enrollment == null) return NotFound();
+            var now = DateTime.Now;
+            var attendance = await _context.Attendance
+                            .SingleOrDefaultAsync(x => x.EnrollmentId == enrollment.Id
+                                && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
+                                && x.Out == null);
+            // if found; already checked in
+            if(attendance != null) return new OkResult();
+            // else add it.
+            var newAttendance = new Attendance {
+                Id = 0,
+                In = DateTime.Now,
+                Out = null,
+                Excused = null,
+                Note = null,
+                EnrollmentId = enrollment.Id
+            };
+            return await PostAttendance(newAttendance);
+        }
+
+        // POST: dsi/Attendances/checkout/{cohortId}/{studendId}
+        [HttpPost("checkout/{cohortId}/{studentId}")]
+        public async Task<IActionResult> Checkout(int cohortId, int studentId) {
+            var enrollment = await _context.Enrollments
+                             .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
+            if(enrollment == null) return NotFound();
+            var now = DateTime.Now;
+            var attendance = await _context.Attendance
+                            .SingleOrDefaultAsync(x => x.EnrollmentId == enrollment.Id
+                                && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
+                                && x.Out == null);
+            // if not found; error
+            if(attendance == null) {
+                var ex = new Exception("Checkout without checking");
+                logger.Error(ex, "{0}", ex.Message);
+                throw ex;
+            }
+            // check out
+            attendance.Out = DateTime.Now;
+            return await PutAttendance(attendance.Id, attendance);
+        }
+
+        // GET: dsi/Attendances
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Attendance>>> GetAttendance() {
             try {
@@ -32,7 +79,7 @@ namespace DSI.BcmsServer.Controllers {
             }
         }
 
-        // GET: api/Attendances/5
+        // GET: dsi/Attendances/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Attendance>> GetAttendance(int id) {
             try {
@@ -50,7 +97,7 @@ namespace DSI.BcmsServer.Controllers {
             }
         }
 
-        // PUT: api/Attendances/5
+        // PUT: dsi/Attendances/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
@@ -80,7 +127,7 @@ namespace DSI.BcmsServer.Controllers {
             }
         }
 
-        // POST: api/Attendances
+        // POST: dsi/Attendances
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
@@ -97,7 +144,7 @@ namespace DSI.BcmsServer.Controllers {
             }
         }
 
-        // DELETE: api/Attendances/5
+        // DELETE: dsi/Attendances/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Attendance>> DeleteAttendance(int id) {
             try {
