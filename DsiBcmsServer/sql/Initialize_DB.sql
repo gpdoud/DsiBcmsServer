@@ -11,6 +11,16 @@ begin
 				select UserId from Enrollments where CohortId = @cohortid
 			)
 end
+go;
+CREATE View UserCheckInOut as 
+select concat(u.firstname, ' ', u.Lastname) as 'Student', 
+		format(a.[In], 'dd-MMM hh:mm:ss') as 'In',
+		format(a.[Out], 'dd-MMM hh:mm:ss') as 'Out'
+	from Attendance a
+	join Enrollments e
+		on a.EnrollmentId = e.Id
+	join Users u
+		on u.Id = e.UserId
 go
 insert into Configs (KeyValue, DataValue, System, Active, Created)
 	values ('name', 'Boot Camp Management System (BCMS)', 1, 1, GetDate());
