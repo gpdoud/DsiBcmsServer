@@ -57,7 +57,7 @@ insert into Roles (Code, Name, IsRoot, IsAdmin, IsStaff, IsInstructor, IsStudent
 insert into Roles (Code, Name, IsRoot, IsAdmin, IsStaff, IsInstructor, IsStudent, Active, Created) 
 	values ('ins', 'Instructor', 0, 0, 0, 1, 0, 1, GetDate());
 insert into Roles (Code, Name, IsRoot, IsAdmin, IsStaff, IsInstructor, IsStudent, Active, Created) 
-	values ('stu', 'Student', 0, 0, 0, 0, 0, 1, GetDate());
+	values ('stu', 'Student', 0, 0, 0, 0, 1, 1, GetDate());
 select * from Roles;
 
 insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, Active, Created)

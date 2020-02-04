@@ -20,6 +20,21 @@ namespace DSI.BcmsServer.Controllers {
             _context = context;
         }
 
+        // GET: dsi/Attendances/ischeckedin/{cohortid}/{studentId}
+        [HttpGet("ischeckedin/{cohortId}/{studentId}")]
+        public async Task<ActionResult<Attendance>> IsCheckedIn(int cohortId, int studentId) {
+            var enrollment = await _context.Enrollments
+                             .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
+            if(enrollment == null) return NotFound();
+            var now = DateTime.Now;
+            // if attendance is found; student is already checked in
+            // if null, not checked in
+            return await _context.Attendance
+                            .SingleOrDefaultAsync(x => x.EnrollmentId == enrollment.Id
+                                && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
+                                && x.Out == null);
+        }
+
         // POST: dsi/Attendances/checkin/{cohortId}/{studendId}
         [HttpPost("checkin/{cohortId}/{studentId}")]
         public async Task<ActionResult<Attendance>> Checkin(int cohortId, int studentId) {
