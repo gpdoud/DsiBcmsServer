@@ -59,6 +59,7 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.WorkPhone).HasMaxLength(12);
                 e.Property(x => x.RoleCode).HasMaxLength(8);
                 e.Property(x => x.SecurityKey).HasMaxLength(36);
+                e.Property(x => x.PinCode).HasMaxLength(4);
                 e.Property(x => x.Active).IsRequired();
                 e.Property(x => x.Created).IsRequired();
                 e.Property(x => x.Updated);

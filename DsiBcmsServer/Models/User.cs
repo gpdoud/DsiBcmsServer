@@ -17,6 +17,7 @@ namespace DSI.BcmsServer.Models {
         public string WorkPhone { get; set; }
         public string RoleCode { get; set; }
         public string SecurityKey { get; set; }
+        public string PinCode { get; set; }
 
         public bool Active { get; set; } = true;
         public DateTime Created { get; set; } = DateTime.Now;

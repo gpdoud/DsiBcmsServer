@@ -60,18 +60,18 @@ insert into Roles (Code, Name, IsRoot, IsAdmin, IsStaff, IsInstructor, IsStudent
 	values ('stu', 'Student', 0, 0, 0, 0, 1, 1, GetDate());
 select * from Roles;
 
-insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, Active, Created)
-	values ('gpdoud', 'MaxPass@8888', 'Greg', 'Doud', 'gdoud@maxtrain.com', '513-703-7315', '513-322-8888', 'root', 1, GetDate());
-insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, Active, Created)
-	values ('dbartick', 'MaxPass@8888', 'Denise', 'Bartick', 'dbartick@maxtrain.com', null, '513-322-8888', 'admstf', 1, GetDate());
-insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, Active, Created)
-	values ('pmiller', 'MaxPass@8888', 'Patricia', 'Miller', 'pmiller@maxtrain.com', null, '513-322-8888', 'admstf', 1, GetDate());
-insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, Active, Created)
-	values ('kpeace', 'MaxPass@8888', 'Kim', 'Peace', 'kpeace@maxtrain.com', null, '513-322-8888', 'admstf', 1, GetDate());
-insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, Active, Created)
-	values ('dmiller', 'MaxPass@8888', 'Dustin', 'Miller', 'dmiller@maxtrain.com', null, '513-322-8888', 'stf', 1, GetDate());
-insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, Active, Created)
-	values ('sblessing', 'MaxPass@8888', 'Sean', 'Blessing', 'sblessing@maxtrain.com', null, '513-322-8888', 'ins', 1, GetDate());
+insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, PinCode, Active, Created)
+	values ('gpdoud', 'MaxPass@8888', 'Greg', 'Doud', 'gdoud@maxtrain.com', '513-703-7315', '513-322-8888', 'root', 4900, 1, GetDate());
+insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, PinCode, Active, Created)
+	values ('dbartick', 'MaxPass@8888', 'Denise', 'Bartick', 'dbartick@maxtrain.com', null, '513-322-8888', 'admstf', 4900, 1, GetDate());
+insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, PinCode, Active, Created)
+	values ('pmiller', 'MaxPass@8888', 'Patricia', 'Miller', 'pmiller@maxtrain.com', null, '513-322-8888', 'admstf', 4900, 1, GetDate());
+insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, PinCode, Active, Created)
+	values ('kpeace', 'MaxPass@8888', 'Kim', 'Peace', 'kpeace@maxtrain.com', null, '513-322-8888', 'admstf', 4900, 1, GetDate());
+insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, PinCode, Active, Created)
+	values ('dmiller', 'MaxPass@8888', 'Dustin', 'Miller', 'dmiller@maxtrain.com', null, '513-322-8888', 'stf', 4900, 1, GetDate());
+insert into Users (Username, Password, Firstname, Lastname, Email, CellPhone, WorkPhone, RoleCode, PinCode, Active, Created)
+	values ('sblessing', 'MaxPass@8888', 'Sean', 'Blessing', 'sblessing@maxtrain.com', null, '513-322-8888', 'ins', 4900, 1, GetDate());
 select * from Users;
 
 insert into Cohorts ([Name], [BeginDate], [EndDate], [Capacity], InstructorId, Active, Created)
