@@ -37,7 +37,7 @@ namespace DSI.BcmsServer.Controllers {
 
         // POST: dsi/Attendances/checkin/{cohortId}/{studendId}
         [HttpPost("checkin/{cohortId}/{studentId}")]
-        public async Task<ActionResult<Attendance>> Checkin(int cohortId, int studentId) {
+        public async Task<ActionResult<Attendance>> Checkin(int cohortId, int studentId, Attendance attnd) {
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
@@ -53,8 +53,8 @@ namespace DSI.BcmsServer.Controllers {
                 Id = 0,
                 In = DateTime.Now,
                 Out = null,
-                Excused = null,
-                Note = null,
+                Excused = attnd.Excused,
+                Note = attnd.Note,
                 EnrollmentId = enrollment.Id
             };
             return await PostAttendance(newAttendance);
@@ -62,7 +62,7 @@ namespace DSI.BcmsServer.Controllers {
 
         // POST: dsi/Attendances/checkout/{cohortId}/{studendId}
         [HttpPost("checkout/{cohortId}/{studentId}")]
-        public async Task<IActionResult> Checkout(int cohortId, int studentId) {
+        public async Task<IActionResult> Checkout(int cohortId, int studentId, Attendance attnd) {
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
@@ -79,6 +79,9 @@ namespace DSI.BcmsServer.Controllers {
             }
             // check out
             attendance.Out = DateTime.Now;
+            if(attnd.Note != null && attnd.Note.Trim().Length > 0) { // append note if exists
+                attendance.Note += $" || {attnd.Note}";
+            }
             return await PutAttendance(attendance.Id, attendance);
         }
 
