@@ -62,6 +62,10 @@ namespace DSI.BcmsServer.Controllers {
             }
         }
 
+        [HttpPost("update/{userId}/{cohortId}")]
+        public async Task<IActionResult> PostUpdateEnrollment(int id, Enrollment enrollment) {
+            return await PutEnrollment(id, enrollment);
+        }
         // PUT: api/Enrollments/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
@@ -115,6 +119,10 @@ namespace DSI.BcmsServer.Controllers {
 
         }
 
+        [HttpPost("delete/{id}")]
+        public async Task<ActionResult<Enrollment>> PostDeleteEnrollment(int id) {
+            return await DeleteEnrollment(id);
+        }
         // DELETE: api/Enrollments/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Enrollment>> DeleteEnrollment(int id) {

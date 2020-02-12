@@ -35,6 +35,10 @@ namespace DSI.BcmsServer.Controllers {
             return cohort;
         }
 
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> PostUpdateCohort(int id, Cohort cohort) {
+            return await PutCohort(id, cohort);
+        }
         // PUT: api/Cohorts/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
@@ -71,6 +75,10 @@ namespace DSI.BcmsServer.Controllers {
             return CreatedAtAction("GetCohort", new { id = cohort.Id }, cohort);
         }
 
+        [HttpPost("{id}")]
+        public async Task<ActionResult<Cohort>> PostDeleteCohort(int id) {
+            return await DeleteCohort(id);
+        }
         // DELETE: api/Cohorts/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Cohort>> DeleteCohort(int id) {

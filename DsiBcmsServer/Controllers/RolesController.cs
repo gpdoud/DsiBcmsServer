@@ -7,66 +7,56 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DSI.BcmsServer.Models;
 
-namespace DSI.BcmsServer.Controllers
-{
+namespace DSI.BcmsServer.Controllers {
     [Route("dsi/[controller]")]
     [ApiController]
-    public class RolesController : ControllerBase
-    {
+    public class RolesController : ControllerBase {
         private readonly DsiBcmsContext _context;
 
-        public RolesController(DsiBcmsContext context)
-        {
+        public RolesController(DsiBcmsContext context) {
             _context = context;
         }
 
         // GET: api/Roles
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Role>>> GetRole()
-        {
+        public async Task<ActionResult<IEnumerable<Role>>> GetRole() {
             return await _context.Roles.ToListAsync();
         }
 
         // GET: api/Roles/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Role>> GetRole(string id)
-        {
+        public async Task<ActionResult<Role>> GetRole(string id) {
             var role = await _context.Roles.FindAsync(id);
 
-            if (role == null)
-            {
+            if(role == null) {
                 return NotFound();
             }
 
             return role;
         }
 
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> PostUpdateRole(string id, Role role) {
+            return await PutRole(id, role);
+        }
         // PUT: api/Roles/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRole(string id, Role role)
-        {
-            if (id != role.Code)
-            {
+        public async Task<IActionResult> PutRole(string id, Role role) {
+            if(id != role.Code) {
                 return BadRequest();
             }
 
             role.Updated = DateTime.Now;
             _context.Entry(role).State = EntityState.Modified;
 
-            try
-            {
+            try {
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoleExists(id))
-                {
+            } catch(DbUpdateConcurrencyException) {
+                if(!RoleExists(id)) {
                     return NotFound();
-                }
-                else
-                {
+                } else {
                     throw;
                 }
             }
@@ -78,21 +68,14 @@ namespace DSI.BcmsServer.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Role>> PostRole(Role role)
-        {
+        public async Task<ActionResult<Role>> PostRole(Role role) {
             _context.Roles.Add(role);
-            try
-            {
+            try {
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (RoleExists(role.Code))
-                {
+            } catch(DbUpdateException) {
+                if(RoleExists(role.Code)) {
                     return Conflict();
-                }
-                else
-                {
+                } else {
                     throw;
                 }
             }
@@ -100,13 +83,15 @@ namespace DSI.BcmsServer.Controllers
             return CreatedAtAction("GetRole", new { id = role.Code }, role);
         }
 
+        [HttpPost("delete/{id}")]
+        public async Task<ActionResult<Role>> PostDeleteRole(string id) {
+            return await DeleteRole(id);
+        }
         // DELETE: api/Roles/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Role>> DeleteRole(string id)
-        {
+        public async Task<ActionResult<Role>> DeleteRole(string id) {
             var role = await _context.Roles.FindAsync(id);
-            if (role == null)
-            {
+            if(role == null) {
                 return NotFound();
             }
 
@@ -116,8 +101,7 @@ namespace DSI.BcmsServer.Controllers
             return role;
         }
 
-        private bool RoleExists(string id)
-        {
+        private bool RoleExists(string id) {
             return _context.Roles.Any(e => e.Code == id);
         }
     }
