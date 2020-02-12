@@ -12,10 +12,12 @@ begin
 			)
 end
 go;
-CREATE View UserCheckInOut as 
+CREATE OR ALTER View [dbo].[UserCheckInOut] as 
 select concat(u.firstname, ' ', u.Lastname) as 'Student', 
 		format(a.[In], 'dd-MMM hh:mm:ss') as 'In',
-		format(a.[Out], 'dd-MMM hh:mm:ss') as 'Out'
+		format(a.[Out], 'dd-MMM hh:mm:ss') as 'Out',
+		a.[Note],
+		a.[Excused]
 	from Attendance a
 	join Enrollments e
 		on a.EnrollmentId = e.Id
