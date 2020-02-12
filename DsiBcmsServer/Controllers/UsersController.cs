@@ -66,6 +66,12 @@ namespace DSI.BcmsServer.Controllers {
             return user;
         }
 
+        // POST: dsi/Users/Update/5
+        // To get around problem with Put and Delete
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> UpdateUser(int id, User user) {
+            return await PutUser(id, user);
+        }
         // PUT: api/Users/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
@@ -102,6 +108,11 @@ namespace DSI.BcmsServer.Controllers {
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
 
+        // DELETE: api/Users/5
+        [HttpPost("delete/{id}")]
+        public async Task<ActionResult<User>> PostDeleteUser(int id) {
+            return await DeleteUser(id);
+        }
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(int id) {

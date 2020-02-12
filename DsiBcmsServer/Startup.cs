@@ -23,7 +23,8 @@ namespace DsiBcmsServer {
         private readonly string DefaultCorsPolicy = "_defaultCorsPolicy";
         private string[] AllowedOrigins = { 
             "http://localhost", "https://localhost",
-            "http://localhost:4200", "https://localhost:4200"
+            "http://localhost:4200", "https://localhost:4200",
+            "http://doudsystems.com", "https://doudsystems.com"
         };
         private string[] AllowedMethods = { "GET", "POST", "PUT", "DELETE" };
 

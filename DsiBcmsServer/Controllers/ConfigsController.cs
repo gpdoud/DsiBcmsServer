@@ -76,6 +76,11 @@ namespace DSI.BcmsServer.Controllers {
             }
         }
 
+        [HttpPost("delete/{key}")]
+        public async Task<ActionResult<Config>> PostRemove(string key) {
+            return await Remove(key);
+        }
+
         [HttpDelete("{key}")]
         public async Task<ActionResult<Config>> Remove(string key) {
             try {
