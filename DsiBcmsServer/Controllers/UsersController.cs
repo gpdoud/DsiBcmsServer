@@ -18,6 +18,22 @@ namespace DSI.BcmsServer.Controllers {
             _context = context;
         }
 
+        // GET: dsi/getcohort/5
+        // Retrieves the active Cohort for a given Student (user)
+        [HttpGet("getcohort/{id}")]
+        public async Task<IActionResult> GetActiveCohortByStudent(int id) {
+            var cohort = from u in _context.Users
+                         join e in _context.Enrollments
+                            on u.Id equals e.UserId
+                         join c in _context.Cohorts
+                            on e.CohortId equals c.Id
+                         where u.Id == id
+                         select new { StudentId = u.Id, StudentLastName = u.Lastname, CohortId = c.Id, CohortName = c.Name };
+            var result = await cohort.FirstOrDefaultAsync();
+            if(result == null) return NotFound();
+            return new JsonResult(result);
+        }
+
         // GET: dsi/students
         [HttpGet("students")]
         public async Task<ActionResult<IEnumerable<User>>> GetStudents() {
