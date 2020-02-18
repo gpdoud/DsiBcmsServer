@@ -16,6 +16,8 @@ namespace DSI.BcmsServer.Models {
         public DbSet<Role> Roles { get; set; }
         public DbSet<Cohort> Cohorts { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Attendance> Attendance { get; set; }
+        public DbSet<Assessment> Assessments { get; set; }
 
         public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {}
 
@@ -99,9 +101,19 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.Note);
                 e.HasOne(x => x.Enrollment).WithMany(x => x.Attendances).HasForeignKey(x => x.EnrollmentId);
             });
+            builder.Entity<Assessment>(e => {
+                e.ToTable("Assessments");
+
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Date);
+                e.Property(x => x.Subject);
+                e.Property(x => x.Description);
+                e.Property(x => x.PointsScore);
+                e.Property(x => x.PointsMax);
+                e.HasOne(x => x.Enrollment).WithMany(x => x.Assessments).HasForeignKey(x => x.EnrollmentId);
+            });
         }
 
-        public DbSet<DSI.BcmsServer.Models.Attendance> Attendance { get; set; }
 
     }
 }
