@@ -30,10 +30,10 @@ namespace DSI.BcmsServer.Controllers {
         }
 
         // GET: api/Enrollments/5
-        [HttpGet("{userId}/{cohortId}")]
-        public async Task<ActionResult<Enrollment>> GetEnrollment(int userId, int cohortId) {
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Enrollment>> GetEnrollment(int id) {
             try {
-                var enrollment = await _context.Enrollments.FindAsync(userId, cohortId);
+                var enrollment = await _context.Enrollments.FindAsync(id);
 
                 if(enrollment == null) {
                     return NotFound();
@@ -44,6 +44,15 @@ namespace DSI.BcmsServer.Controllers {
                 return new JsonResult(ex.Message, ex);
             }
 
+        }
+
+        // GET: api/Enrollments/{cohortId}/{userId}
+        [HttpGet("{cohortId}/{userId}")]
+        public async Task<ActionResult<Enrollment>> GetEnrollmentByCohortAndUser(int cohortId, int userId) {
+            var enrl = await _context.Enrollments
+                                .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == userId);
+            if(enrl == null) return NotFound();
+            return enrl;
         }
 
         // GET: api/Enrollments/5

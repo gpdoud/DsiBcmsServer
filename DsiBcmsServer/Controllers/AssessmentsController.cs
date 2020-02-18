@@ -17,13 +17,26 @@ namespace DSI.BcmsServer.Controllers {
             _context = context;
         }
 
-        // GET: api/Assessments
+        // GET: dsi/Assessments/bycohort/{cohortId}
+        [HttpGet("bycohort/{cohortId}")]
+        public async Task<ActionResult<IEnumerable<Assessment>>> GetAssessmentsByCohortId(int cohortId) {
+            var assessments = from c in _context.Cohorts
+                              join e in _context.Enrollments
+                              on c.Id equals e.CohortId
+                              join a in _context.Assessments
+                              on e.Id equals a.EnrollmentId
+                              where c.Id == cohortId
+                              select a;
+            return await assessments.ToListAsync();
+        }
+
+        // GET: dsi/Assessments
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Assessment>>> GetAssessments() {
             return await _context.Assessments.ToListAsync();
         }
 
-        // GET: api/Assessments/5
+        // GET: dsi/Assessments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Assessment>> GetAssessment(int id) {
             var assessment = await _context.Assessments.FindAsync(id);
@@ -35,12 +48,12 @@ namespace DSI.BcmsServer.Controllers {
             return assessment;
         }
 
-        // PUT: api/Assessments/5
+        // PUT: dsi/Assessments/5
         [HttpPost("update/{id}")]
         public async Task<IActionResult> UpdateAssessment(int id, Assessment assessment) {
             return await PutAssessment(id, assessment);
         }
-        // PUT: api/Assessments/5
+        // PUT: dsi/Assessments/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
@@ -64,7 +77,7 @@ namespace DSI.BcmsServer.Controllers {
             return NoContent();
         }
 
-        // POST: api/Assessments
+        // POST: dsi/Assessments
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
@@ -75,12 +88,12 @@ namespace DSI.BcmsServer.Controllers {
             return CreatedAtAction("GetAssessment", new { id = assessment.Id }, assessment);
         }
 
-        // DELETE: api/Assessments/5
+        // DELETE: dsi/Assessments/5
         [HttpPost("delete/{id}")]
         public async Task<ActionResult<Assessment>> PostDeleteAssessment(int id) {
             return await DeleteAssessment(id);
         }
-        // DELETE: api/Assessments/5
+        // DELETE: dsi/Assessments/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Assessment>> DeleteAssessment(int id) {
             var assessment = await _context.Assessments.FindAsync(id);
