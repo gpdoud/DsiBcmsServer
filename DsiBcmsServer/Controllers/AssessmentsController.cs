@@ -17,6 +17,19 @@ namespace DSI.BcmsServer.Controllers {
             _context = context;
         }
 
+        // GET: dsi/Assessments/bycohortandstudent/{cohortId}/{studentId}
+        [HttpGet("bystudent/{studentId}")]
+        public async Task<ActionResult<IEnumerable<Assessment>>> GetAssessmentsByStudent(int studentId) {
+            var assessments = from u in _context.Users
+                              join e in _context.Enrollments
+                              on u.Id equals e.UserId
+                              join a in _context.Assessments
+                              on e.Id equals a.EnrollmentId
+                              where u.Id == studentId
+                              select a;
+            return await assessments.ToListAsync();
+        }
+
         // GET: dsi/Assessments/bycohort/{cohortId}
         [HttpGet("bycohort/{cohortId}")]
         public async Task<ActionResult<IEnumerable<Assessment>>> GetAssessmentsByCohortId(int cohortId) {
