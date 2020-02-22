@@ -28,6 +28,8 @@ namespace DSI.BcmsServer.Models {
         public virtual IEnumerable<Enrollment> Enrollments { get; set; }
         [JsonIgnore]
         public virtual IEnumerable<Cohort> Cohorts { get; set; }
+        [JsonIgnore]
+        public virtual IEnumerable<Feedback> Feedbacks { get; set; }
 
         public User() { }
     }

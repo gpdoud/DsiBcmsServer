@@ -112,7 +112,24 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.PointsMax);
                 e.HasOne(x => x.Enrollment).WithMany(x => x.Assessments).HasForeignKey(x => x.EnrollmentId);
             });
+            builder.Entity<Feedback>(e => {
+                e.ToTable("Feedbacks");
+
+                e.HasKey(x => x.Id);
+                e.Property(x => x.UserId).IsRequired();
+                e.Property(x => x.Category);
+                e.Property(x => x.Title);
+                e.Property(x => x.Text);
+                e.Property(x => x.Locked).IsRequired();
+                e.Property(x => x.NextId);
+                e.Property(x => x.Active).IsRequired();
+                e.Property(x => x.Created).IsRequired();
+                e.Property(x => x.Updated);
+                e.HasOne(x => x.User).WithMany(x => x.Feedbacks).HasForeignKey(x => x.UserId);
+            });
         }
+
+        public DbSet<DSI.BcmsServer.Models.Feedback> Feedback { get; set; }
 
 
     }
