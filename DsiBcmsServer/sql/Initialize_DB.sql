@@ -79,6 +79,6 @@ select * from Users;
 insert into Cohorts ([Name], [BeginDate], [EndDate], [Capacity], InstructorId, Active, Created)
 	values ('.Net FT BC #9', '2020-01-28', '2020-04-10', 12, 1, 1, '2020-01-10');
 insert into Cohorts ([Name], [BeginDate], [EndDate], [Capacity], InstructorId, Active, Created)
-	values ('.Net FT BC #10', '2020-06-88', '2020-08-21', 12, 1, 1, '2020-01-10');
+	values ('.Net FT BC #10', '2020-06-08', '2020-08-21', 12, 1, 1, '2020-01-10');
 select * from Cohorts;
 go

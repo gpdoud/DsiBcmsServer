@@ -56,6 +56,7 @@ namespace DSI.BcmsServer.Controllers
                 return BadRequest();
             }
 
+            feedback.Updated = DateTime.Now;
             _context.Entry(feedback).State = EntityState.Modified;
 
             try
