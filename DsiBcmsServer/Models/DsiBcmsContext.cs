@@ -11,13 +11,14 @@ namespace DSI.BcmsServer.Models {
 
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public DbSet<Config> Configs { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Cohort> Cohorts { get; set; }
-        public DbSet<Enrollment> Enrollments { get; set; }
-        public DbSet<Attendance> Attendance { get; set; }
         public DbSet<Assessment> Assessments { get; set; }
+        public DbSet<Attendance> Attendance { get; set; }
+        public DbSet<Cohort> Cohorts { get; set; }
+        public DbSet<Config> Configs { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Feedback> Feedback { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {}
 
@@ -120,8 +121,10 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.Category);
                 e.Property(x => x.Title);
                 e.Property(x => x.Text);
+                e.Property(x => x.Response);
                 e.Property(x => x.Locked).IsRequired();
                 e.Property(x => x.NextId);
+                e.Property(x => x.PrevId);
                 e.Property(x => x.Active).IsRequired();
                 e.Property(x => x.Created).IsRequired();
                 e.Property(x => x.Updated);
@@ -129,7 +132,6 @@ namespace DSI.BcmsServer.Models {
             });
         }
 
-        public DbSet<DSI.BcmsServer.Models.Feedback> Feedback { get; set; }
 
 
     }
