@@ -54,7 +54,9 @@ namespace DSI.BcmsServer.Controllers {
                 In = DateTime.Now,
                 Out = null,
                 Excused = attnd.Excused,
+                Absent = attnd.Absent,
                 Note = attnd.Note,
+                SecureNote = attnd.SecureNote,
                 EnrollmentId = enrollment.Id
             };
             return await PostAttendance(newAttendance);
@@ -79,6 +81,12 @@ namespace DSI.BcmsServer.Controllers {
             }
             // check out
             attendance.Out = DateTime.Now;
+            if(attnd.Excused != null) {
+                attendance.Excused = attnd.Excused;
+            }
+            if(attnd.Absent != null) {
+                attendance.Absent = attnd.Absent;
+            }
             if(attnd.Note != null && attnd.Note.Trim().Length > 0) { // append note if exists
                 attendance.Note += $" || {attnd.Note}";
             }
