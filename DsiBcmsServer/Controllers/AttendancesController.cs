@@ -27,7 +27,7 @@ namespace DSI.BcmsServer.Controllers {
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
-            var now = DateTime.Now;
+            var now = Date.EasternTimeNow;
             // if attendance is found; student is already checked in
             // if null, not checked in
             return await _context.Attendance
@@ -53,7 +53,7 @@ namespace DSI.BcmsServer.Controllers {
             // else add it.
             var newAttendance = new Attendance {
                 Id = 0,
-                In = DateTime.Now,
+                In = Date.EasternTimeNow,
                 Out = null,
                 Excused = attnd.Excused,
                 Absent = attnd.Absent,
@@ -70,7 +70,7 @@ namespace DSI.BcmsServer.Controllers {
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
-            var now = DateTime.Now;
+            var now = Date.EasternTimeNow;
             var attendance = await _context.Attendance
                             .SingleOrDefaultAsync(x => x.EnrollmentId == enrollment.Id
                                 && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
@@ -82,7 +82,7 @@ namespace DSI.BcmsServer.Controllers {
                 throw ex;
             }
             // check out
-            attendance.Out = DateTime.Now;
+            attendance.Out = Date.EasternTimeNow;
             if(attnd.Excused != null) {
                 attendance.Excused = attnd.Excused;
             }
