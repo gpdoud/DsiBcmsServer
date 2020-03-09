@@ -14,7 +14,7 @@ namespace DSI.BcmsServer.Controllers {
     [ApiController]
     public class ConfigsController : ControllerBase {
 
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         private DsiBcmsContext _context = null;
         public ConfigsController(DsiBcmsContext context) { _context = context; }
@@ -27,9 +27,9 @@ namespace DSI.BcmsServer.Controllers {
 
         [HttpGet("{key}")]
         public async Task<ActionResult<Config>> GetKey(string key) {
-            logger.Trace($"key = {key}");
             var sysctrl = await _context.Configs.FindAsync(key);
             if(sysctrl == null) return NotFound();
+            logger.Debug("key = {0}, value = {1}", sysctrl.KeyValue, sysctrl.DataValue);
             return sysctrl;
         }
 

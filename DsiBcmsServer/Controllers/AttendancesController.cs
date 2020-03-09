@@ -13,7 +13,7 @@ namespace DSI.BcmsServer.Controllers {
     [ApiController]
     public class AttendancesController : ControllerBase {
 
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly DsiBcmsContext _context;
 
@@ -24,21 +24,33 @@ namespace DSI.BcmsServer.Controllers {
         // GET: dsi/Attendances/ischeckedin/{cohortid}/{studentId}
         [HttpGet("ischeckedin/{cohortId}/{studentId}")]
         public async Task<ActionResult<Attendance>> IsCheckedIn(int cohortId, int studentId) {
+            logger.Trace("Attendance.IsCheckedIn: parms cohortId({0}), studentId({1})", cohortId, studentId);
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
             var now = Date.EasternTimeNow;
+            // check if SOMEHOW, a student has multipel check records
+            var count = _context.Attendance.CountAsync(x => x.EnrollmentId == enrollment.Id
+                                && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
+                                && x.Out == null);
+            if(count.Result > 1) {
+                logger.Error("ERROR: CohortId {0}, EnrollmentId {1}, StudentId {2} has {3} attendance records!",
+                                cohortId, enrollment.Id, studentId, count);
+            }
             // if attendance is found; student is already checked in
             // if null, not checked in
-            return await _context.Attendance
+            var attnd = await _context.Attendance
                             .SingleOrDefaultAsync(x => x.EnrollmentId == enrollment.Id
                                 && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
                                 && x.Out == null);
+            logger.Debug("IsCheckedIn: Is cohortId {0} and studentId {1} checked in?: {2}", cohortId, studentId, (attnd != null ? "Yes" : "No"));
+            return attnd;
         }
 
         // POST: dsi/Attendances/checkin/{cohortId}/{studendId}
         [HttpPost("checkin/{cohortId}/{studentId}")]
         public async Task<ActionResult<Attendance>> Checkin(int cohortId, int studentId, Attendance attnd) {
+            logger.Trace("Attendance.CheckedIn: parms cohortId({0}), studentId({1})", cohortId, studentId);
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
@@ -49,6 +61,7 @@ namespace DSI.BcmsServer.Controllers {
                                 && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
                                 && x.Out == null);
             // if found; already checked in
+            logger.Debug("CheckIn: Is cohortId {0} and studentId {1} checked in?: {2}", cohortId, studentId, (attendance != null ? "Yes" : "No"));
             if(attendance != null) return new OkResult();
             // else add it.
             var newAttendance = new Attendance {
@@ -61,12 +74,14 @@ namespace DSI.BcmsServer.Controllers {
                 SecureNote = attnd.SecureNote,
                 EnrollmentId = enrollment.Id
             };
+            logger.Trace("Checking-in studentId {0}", studentId);
             return await PostAttendance(newAttendance);
         }
 
         // POST: dsi/Attendances/checkout/{cohortId}/{studendId}
         [HttpPost("checkout/{cohortId}/{studentId}")]
         public async Task<IActionResult> Checkout(int cohortId, int studentId, Attendance attnd) {
+            logger.Trace("Attendance.CheckedOut: parms cohortId({0}), studentId({1})", cohortId, studentId);
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
@@ -77,7 +92,7 @@ namespace DSI.BcmsServer.Controllers {
                                 && x.Out == null);
             // if not found; error
             if(attendance == null) {
-                var ex = new Exception("Checkout without checking");
+                var ex = new Exception("Checkout without checkin");
                 logger.Error(ex, "{0}", ex.Message);
                 throw ex;
             }
@@ -92,6 +107,7 @@ namespace DSI.BcmsServer.Controllers {
             if(attnd.Note != null && attnd.Note.Trim().Length > 0) { // append note if exists
                 attendance.Note += $" || {attnd.Note}";
             }
+            logger.Trace("Checking-out studentId {0}", studentId);
             return await PutAttendance(attendance.Id, attendance);
         }
 

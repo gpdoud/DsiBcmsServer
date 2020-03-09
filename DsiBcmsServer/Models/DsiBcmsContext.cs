@@ -9,7 +9,7 @@ namespace DSI.BcmsServer.Models {
 
     public class DsiBcmsContext : DbContext {
 
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
         public DbSet<Assessment> Assessments { get; set; }
         public DbSet<Attendance> Attendance { get; set; }
