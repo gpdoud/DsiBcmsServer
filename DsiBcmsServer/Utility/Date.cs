@@ -12,9 +12,6 @@ namespace DSI.BcmsServer.Utility {
                 var utcNow = DateTime.UtcNow;
                 var est = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
                 var etNow = TimeZoneInfo.ConvertTimeFromUtc(utcNow, est);
-                if(est.IsDaylightSavingTime(etNow)) {
-                    etNow = etNow.AddHours(1);
-                }
                 return etNow;
             }
         }
