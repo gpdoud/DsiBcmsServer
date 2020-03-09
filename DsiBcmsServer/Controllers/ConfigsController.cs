@@ -29,7 +29,7 @@ namespace DSI.BcmsServer.Controllers {
         public async Task<ActionResult<Config>> GetKey(string key) {
             var sysctrl = await _context.Configs.FindAsync(key);
             if(sysctrl == null) return NotFound();
-            logger.Debug("key = {0}, value = {1}", sysctrl.KeyValue, sysctrl.DataValue);
+            logger.Trace("key = {0}, value = {1}", sysctrl.KeyValue, sysctrl.DataValue);
             return sysctrl;
         }
 

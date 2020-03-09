@@ -20,10 +20,10 @@ namespace DSI.BcmsServer.Models {
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
 
-        public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {}
+        public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {
+        }
 
         protected override void OnModelCreating(ModelBuilder builder) {
-            logger.Trace($".OnModelCreating()");
             builder.Entity<Config>(e => {
                 e.ToTable("Configs");
                 e.HasKey(x => x.KeyValue);

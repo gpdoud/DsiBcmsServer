@@ -29,7 +29,7 @@ namespace DSI.BcmsServer.Controllers {
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
             var now = Date.EasternTimeNow;
-            // check if SOMEHOW, a student has multipel check records
+            // check if SOMEHOW, a student has multiple check records
             var count = _context.Attendance.CountAsync(x => x.EnrollmentId == enrollment.Id
                                 && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
                                 && x.Out == null);
@@ -43,7 +43,6 @@ namespace DSI.BcmsServer.Controllers {
                             .SingleOrDefaultAsync(x => x.EnrollmentId == enrollment.Id
                                 && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
                                 && x.Out == null);
-            logger.Debug("IsCheckedIn: Is cohortId {0} and studentId {1} checked in?: {2}", cohortId, studentId, (attnd != null ? "Yes" : "No"));
             return attnd;
         }
 
@@ -51,6 +50,8 @@ namespace DSI.BcmsServer.Controllers {
         [HttpPost("checkin/{cohortId}/{studentId}")]
         public async Task<ActionResult<Attendance>> Checkin(int cohortId, int studentId, Attendance attnd) {
             logger.Trace("Attendance.CheckedIn: parms cohortId({0}), studentId({1})", cohortId, studentId);
+            var student = _context.Users.Find(studentId);
+            logger.Debug("CheckIn(): Checking in {0} {1}", student.Firstname, student.Lastname);
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
@@ -61,7 +62,7 @@ namespace DSI.BcmsServer.Controllers {
                                 && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
                                 && x.Out == null);
             // if found; already checked in
-            logger.Debug("CheckIn: Is cohortId {0} and studentId {1} checked in?: {2}", cohortId, studentId, (attendance != null ? "Yes" : "No"));
+            logger.Debug("CheckIn(): Is {0} {1} already checked in? {2}", student.Firstname, student.Lastname, (attendance != null ? "Yes" : "No"));
             if(attendance != null) return new OkResult();
             // else add it.
             var newAttendance = new Attendance {
@@ -74,7 +75,7 @@ namespace DSI.BcmsServer.Controllers {
                 SecureNote = attnd.SecureNote,
                 EnrollmentId = enrollment.Id
             };
-            logger.Trace("Checking-in studentId {0}", studentId);
+            logger.Trace("Checking-in studentId {0} at {1}", studentId, newAttendance.In);
             return await PostAttendance(newAttendance);
         }
 
@@ -82,6 +83,8 @@ namespace DSI.BcmsServer.Controllers {
         [HttpPost("checkout/{cohortId}/{studentId}")]
         public async Task<IActionResult> Checkout(int cohortId, int studentId, Attendance attnd) {
             logger.Trace("Attendance.CheckedOut: parms cohortId({0}), studentId({1})", cohortId, studentId);
+            var student = _context.Users.Find(studentId);
+            logger.Debug("CheckOut(): Checking out {0} {1}", student.Firstname, student.Lastname);
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
@@ -107,7 +110,7 @@ namespace DSI.BcmsServer.Controllers {
             if(attnd.Note != null && attnd.Note.Trim().Length > 0) { // append note if exists
                 attendance.Note += $" || {attnd.Note}";
             }
-            logger.Trace("Checking-out studentId {0}", studentId);
+            logger.Trace("Checking-out student {0} {1} at {2}", student.Firstname, student.Lastname, attendance.Out);
             return await PutAttendance(attendance.Id, attendance);
         }
 

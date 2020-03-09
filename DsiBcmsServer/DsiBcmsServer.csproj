@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <AssemblyName>DSI.BcmsServer</AssemblyName>
     <RootNamespace>DSI.BcmsServer</RootNamespace>
+    <Configurations>Debug;Release;DebugProd</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

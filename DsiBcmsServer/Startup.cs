@@ -15,6 +15,9 @@ using Microsoft.Extensions.Logging;
 
 namespace DsiBcmsServer {
     public class Startup {
+
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
@@ -67,6 +70,8 @@ namespace DsiBcmsServer {
             using(var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope()) {
                 scope.ServiceProvider.GetService<DsiBcmsContext>().Database.Migrate();
             }
+
+            logger.Info("Starting Boot Camp Management System (BCMS) {0}", DSI.BcmsServer.Models.System.Version);
 
         }
     }
