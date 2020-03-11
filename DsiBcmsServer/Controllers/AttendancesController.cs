@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DSI.BcmsServer.Models;
 using DSI.BcmsServer.Utility;
+using DSI.BcmsServer.ModelViews;
 
 namespace DSI.BcmsServer.Controllers {
     [Route("dsi/[controller]")]
@@ -19,6 +20,41 @@ namespace DSI.BcmsServer.Controllers {
 
         public AttendancesController(DsiBcmsContext context) {
             _context = context;
+        }
+
+        // GET: dsi/Attendances/report/{cohortId}
+        [HttpGet("report/{cohortId}")]
+        public async Task<ActionResult<IEnumerable<AttendanceReport>>> GetAttendanceForCohort(int cohortId) {
+            var students = (from e in _context.Enrollments
+                            join u in _context.Users
+                            on e.UserId equals u.Id
+                            select u);
+
+            var reports = new List<AttendanceReport>();
+
+            foreach(var student in students.ToList()) {
+
+                var attendances = from c in _context.Cohorts
+                                  join e in _context.Enrollments
+                                  on c.Id equals e.CohortId
+                                  join a in _context.Attendance
+                                  on e.Id equals a.EnrollmentId
+                                  join u in _context.Users
+                                  on e.UserId equals u.Id
+                                  where c.Id == cohortId
+                                    && u.Id == student.Id
+                                  select a;
+
+                var report = new AttendanceReport {
+                    Student = student,
+                    Attendances = attendances.ToList()
+                };
+
+                reports.Add(report);
+
+            }
+
+            return reports;
         }
 
         // GET: dsi/Attendances/ischeckedin/{cohortid}/{studentId}
