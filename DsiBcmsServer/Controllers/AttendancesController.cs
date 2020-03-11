@@ -28,6 +28,7 @@ namespace DSI.BcmsServer.Controllers {
             var students = (from e in _context.Enrollments
                             join u in _context.Users
                             on e.UserId equals u.Id
+                            where e.CohortId == cohortId
                             select u);
 
             var reports = new List<AttendanceReport>();
