@@ -14,8 +14,8 @@ end
 go;
 CREATE OR ALTER   View [dbo].[UserCheckInOut] as 
 select concat(u.Lastname, ', ', u.Firstname) as 'Student', 
-		format(a.[In], 'dd-MMM hh:mm:ss') as 'In',
-		format(a.[Out], 'dd-MMM hh:mm:ss') as 'Out',
+		format(a.[In], 'dd-MMM hh:mm:ss t') as 'In',
+		format(a.[Out], 'dd-MMM hh:mm:ss t') as 'Out',
 		a.Note,
 		a.Excused,
 		a.Absent,
