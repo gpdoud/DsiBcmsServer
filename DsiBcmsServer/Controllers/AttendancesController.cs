@@ -29,11 +29,12 @@ namespace DSI.BcmsServer.Controllers {
                             join u in _context.Users
                             on e.UserId equals u.Id
                             where e.CohortId == cohortId
+                            orderby u.Lastname
                             select u);
 
             var reports = new List<AttendanceReport>();
 
-            foreach(var student in students.ToList()) {
+            foreach(var student in await students.ToListAsync()) {
 
                 var attendances = from c in _context.Cohorts
                                   join e in _context.Enrollments
@@ -44,11 +45,12 @@ namespace DSI.BcmsServer.Controllers {
                                   on e.UserId equals u.Id
                                   where c.Id == cohortId
                                     && u.Id == student.Id
+                                  orderby a.In
                                   select a;
 
                 var report = new AttendanceReport {
                     Student = student,
-                    Attendances = attendances.ToList()
+                    Attendances = await attendances.ToListAsync()
                 };
 
                 reports.Add(report);
