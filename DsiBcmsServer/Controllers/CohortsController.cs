@@ -75,7 +75,7 @@ namespace DSI.BcmsServer.Controllers {
             return CreatedAtAction("GetCohort", new { id = cohort.Id }, cohort);
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("delete/{id}")]
         public async Task<ActionResult<Cohort>> PostDeleteCohort(int id) {
             return await DeleteCohort(id);
         }
