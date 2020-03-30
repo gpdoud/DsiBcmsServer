@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DSI.BcmsServer.Migrations
 {
-    public partial class v80assessmentsevaluationsquestions : Migration
+    public partial class v80initaddedevaluationquestionclasses : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,9 @@ namespace DSI.BcmsServer.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(maxLength: 80, nullable: false),
+                    IsTemplate = table.Column<bool>(nullable: false),
+                    EnrollmentId = table.Column<int>(nullable: true),
                     Active = table.Column<bool>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Updated = table.Column<DateTime>(nullable: true)
@@ -21,6 +23,12 @@ namespace DSI.BcmsServer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Evaluations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Evaluations_Enrollments_EnrollmentId",
+                        column: x => x.EnrollmentId,
+                        principalTable: "Enrollments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -29,18 +37,17 @@ namespace DSI.BcmsServer.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Category = table.Column<string>(nullable: true),
-                    QuestionText = table.Column<string>(nullable: true),
-                    AnswerTextA = table.Column<string>(nullable: true),
-                    AnswerTextB = table.Column<string>(nullable: true),
-                    AnswerTextC = table.Column<string>(nullable: true),
-                    AnswerTextD = table.Column<string>(nullable: true),
-                    AnswerTextE = table.Column<string>(nullable: true),
+                    Category = table.Column<string>(maxLength: 30, nullable: false),
+                    QuestionText = table.Column<string>(maxLength: 255, nullable: false),
+                    AnswerTextA = table.Column<string>(maxLength: 80, nullable: false),
+                    AnswerTextB = table.Column<string>(maxLength: 80, nullable: false),
+                    AnswerTextC = table.Column<string>(maxLength: 80, nullable: true),
+                    AnswerTextD = table.Column<string>(maxLength: 80, nullable: true),
+                    AnswerTextE = table.Column<string>(maxLength: 80, nullable: true),
                     CorrectAnswerNbr = table.Column<int>(nullable: false),
                     PointValue = table.Column<int>(nullable: false),
                     UserAnswerNbr = table.Column<int>(nullable: false),
                     EvaluationId = table.Column<int>(nullable: false),
-                    EnrollmentId = table.Column<int>(nullable: true),
                     Active = table.Column<bool>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Updated = table.Column<DateTime>(nullable: true)
@@ -48,12 +55,6 @@ namespace DSI.BcmsServer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Questions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Questions_Enrollments_EnrollmentId",
-                        column: x => x.EnrollmentId,
-                        principalTable: "Enrollments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Questions_Evaluations_EvaluationId",
                         column: x => x.EvaluationId,
@@ -63,8 +64,8 @@ namespace DSI.BcmsServer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_EnrollmentId",
-                table: "Questions",
+                name: "IX_Evaluations_EnrollmentId",
+                table: "Evaluations",
                 column: "EnrollmentId");
 
             migrationBuilder.CreateIndex(

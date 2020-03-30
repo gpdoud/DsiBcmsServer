@@ -14,6 +14,12 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200329210414_add-evaluation-question.cs" />
     <Compile Remove="Migrations\20200329210414_add-evaluation-question.Designer.cs" />
+    <Compile Remove="Migrations\20200329211235_v80-assessments-evaluations-questions.cs" />
+    <Compile Remove="Migrations\20200329211235_v80-assessments-evaluations-questions.Designer.cs" />
+    <Compile Remove="Migrations\20200330102321_v80-enrollmentid-to-evaluation.cs" />
+    <Compile Remove="Migrations\20200330102321_v80-enrollmentid-to-evaluation.Designer.cs" />
+    <Compile Remove="Migrations\20200330113537_added-evaluation-istemplate.cs" />
+    <Compile Remove="Migrations\20200330113537_added-evaluation-istemplate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

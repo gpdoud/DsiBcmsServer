@@ -205,12 +205,22 @@ namespace DSI.BcmsServer.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(80)")
+                        .HasMaxLength(80);
+
+                    b.Property<int?>("EnrollmentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsTemplate")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EnrollmentId");
 
                     b.ToTable("Evaluations");
                 });
@@ -273,31 +283,37 @@ namespace DSI.BcmsServer.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("AnswerTextA")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(80)")
+                        .HasMaxLength(80);
 
                     b.Property<string>("AnswerTextB")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(80)")
+                        .HasMaxLength(80);
 
                     b.Property<string>("AnswerTextC")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(80)")
+                        .HasMaxLength(80);
 
                     b.Property<string>("AnswerTextD")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(80)")
+                        .HasMaxLength(80);
 
                     b.Property<string>("AnswerTextE")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(80)")
+                        .HasMaxLength(80);
 
                     b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
                     b.Property<int>("CorrectAnswerNbr")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("EnrollmentId")
-                        .HasColumnType("int");
 
                     b.Property<int>("EvaluationId")
                         .HasColumnType("int");
@@ -306,7 +322,9 @@ namespace DSI.BcmsServer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("QuestionText")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
@@ -315,8 +333,6 @@ namespace DSI.BcmsServer.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EnrollmentId");
 
                     b.HasIndex("EvaluationId");
 
@@ -476,6 +492,13 @@ namespace DSI.BcmsServer.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DSI.BcmsServer.Models.Evaluation", b =>
+                {
+                    b.HasOne("DSI.BcmsServer.Models.Enrollment", "Enrollment")
+                        .WithMany()
+                        .HasForeignKey("EnrollmentId");
+                });
+
             modelBuilder.Entity("DSI.BcmsServer.Models.Feedback", b =>
                 {
                     b.HasOne("DSI.BcmsServer.Models.User", "User")
@@ -487,10 +510,6 @@ namespace DSI.BcmsServer.Migrations
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Question", b =>
                 {
-                    b.HasOne("DSI.BcmsServer.Models.Enrollment", "Enrollment")
-                        .WithMany()
-                        .HasForeignKey("EnrollmentId");
-
                     b.HasOne("DSI.BcmsServer.Models.Evaluation", "Evaluation")
                         .WithMany("Questions")
                         .HasForeignKey("EvaluationId")
