@@ -38,8 +38,8 @@ namespace DSI.BcmsServer.Controllers
 
         // POST: api/Questions/Update/5
         [HttpPost("update/{id}")]
-        public async Task<IActionResult> UpdateQuestion(int id, Question Question) {
-            return await PutQuestion(id, Question);
+        public async Task<IActionResult> UpdateQuestion(int id, Question question) {
+            return await PutQuestion(id, question);
         }
 
         // PUT: api/Questions/5

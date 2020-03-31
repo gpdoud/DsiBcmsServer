@@ -40,8 +40,14 @@ namespace DSI.BcmsServer.Controllers {
             return new OkObjectResult(msg);
         }
 
+        // GET: dsi/Evaluations/Templates
+        [HttpGet("templates")]
+        public async Task<ActionResult<IEnumerable<Evaluation>>> GetEvaluationTemplates() {
+            return await _context.Evaluations.Where(x => x.IsTemplate).ToListAsync();
+        }
+
         // GET: dsi/Evaluations
-        [HttpGet]
+        [HttpGet()]
         public async Task<ActionResult<IEnumerable<Evaluation>>> GetEvaluations() {
             return await _context.Evaluations.ToListAsync();
         }
