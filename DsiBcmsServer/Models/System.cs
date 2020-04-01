@@ -8,10 +8,10 @@ namespace DSI.BcmsServer.Models {
     public static class System {
 
         public static readonly int MajorVersion = 0;
-        public static readonly int MinorVersion = 6;
-        public static readonly int PatchVersion = 1;
+        public static readonly int MinorVersion = 8;
+        public static readonly int PatchVersion = 0;
         public static readonly string StatusVersion = "BETA";
-        public static readonly string Branch = "master";
+        public static readonly string Branch = "v8.0-assessments-evaluation";
         public static string Version {
             get {
                 return $"v{MajorVersion}.{MinorVersion}.{PatchVersion} [{StatusVersion}] ({Branch}) ";
