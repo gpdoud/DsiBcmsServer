@@ -18,6 +18,18 @@ namespace DSI.BcmsServer.Controllers
             _context = context;
         }
 
+        private async Task<IActionResult> RecalcPoints(int evaluationId) {
+            var e = await _context.Evaluations.FindAsync(evaluationId);
+            e.PointsAvailable = _context.Questions
+                .Where(q => q.EvaluationId == evaluationId)
+                .Sum(q => q.PointValue);
+            e.PointsScored = _context.Questions
+                .Where(q => q.EvaluationId == evaluationId && q.CorrectAnswerNbr == q.UserAnswerNbr)
+                .Sum(q => q.PointValue); ;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
         // GET: api/Questions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Question>>> GetQuestions() {
@@ -44,15 +56,15 @@ namespace DSI.BcmsServer.Controllers
 
         // PUT: api/Questions/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutQuestion(int id, Question Question)
+        public async Task<IActionResult> PutQuestion(int id, Question question)
         {
-            if (id != Question.Id)
+            if (id != question.Id)
             {
                 return BadRequest();
             }
 
-            Question.Updated = Utility.Date.EasternTimeNow;
-            _context.Entry(Question).State = EntityState.Modified;
+            question.Updated = Utility.Date.EasternTimeNow;
+            _context.Entry(question).State = EntityState.Modified;
 
             try
             {
@@ -69,7 +81,7 @@ namespace DSI.BcmsServer.Controllers
                     throw;
                 }
             }
-
+            await RecalcPoints(question.EvaluationId);
             return NoContent();
         }
 
@@ -77,12 +89,13 @@ namespace DSI.BcmsServer.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Question>> PostQuestion(Question Question)
+        public async Task<ActionResult<Question>> PostQuestion(Question question)
         {
-            _context.Questions.Add(Question);
+            _context.Questions.Add(question);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetQuestion", new { id = Question.Id }, Question);
+            await RecalcPoints(question.EvaluationId);
+            return CreatedAtAction("GetQuestion", new { id = question.Id }, question);
         }
 
         // POST: api/Questions/Delete/5
@@ -95,16 +108,17 @@ namespace DSI.BcmsServer.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Question>> DeleteQuestion(int id)
         {
-            var Question = await _context.Questions.FindAsync(id);
-            if (Question == null)
+            var question = await _context.Questions.FindAsync(id);
+            if (question == null)
             {
                 return NotFound();
             }
 
-            _context.Questions.Remove(Question);
+            _context.Questions.Remove(question);
             await _context.SaveChangesAsync();
 
-            return Question;
+            await RecalcPoints(question.EvaluationId);
+            return question;
         }
 
         private bool QuestionExists(int id)

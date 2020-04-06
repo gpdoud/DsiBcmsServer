@@ -17,6 +17,35 @@ namespace DSI.BcmsServer.Controllers {
             _context = context;
         }
 
+        private async Task CreateAssessmentForEvaluationCompletion(Evaluation evaluation) {
+            var assessment = new Assessment {
+                Id = 0,
+                Active = true,
+                Created = Utility.Date.EasternTimeNow,
+                Date = Utility.Date.EasternTimeNow,
+                Description = $"Completion of {evaluation.Description}",
+                EnrollmentId = evaluation.EnrollmentId.GetValueOrDefault(),
+                PointsMax = evaluation.PointsAvailable,
+                PointsScore = evaluation.PointsScored,
+                Subject = "Evaluation"
+            };
+            await _context.Assessments.AddAsync(assessment);
+            await _context.SaveChangesAsync();
+        }
+
+        // GET: dsi/Evaluations/Student/5
+        [HttpGet("student/{id}")]
+        public async Task<ActionResult<IEnumerable<Evaluation>>> GetEvaluationsForStudent(int id) {
+            var evals = (from u in _context.Users
+                        join en in _context.Enrollments
+                        on u.Id equals en.UserId
+                        join ev in _context.Evaluations
+                        on en.Id equals ev.EnrollmentId
+                        where u.Id == id
+                        select ev).ToListAsync();
+            return await evals;
+        }
+
         // POST: dsi/Evaluations/Assign/5/9
         [HttpPost("assign/{evaluationId}/{cohortId}")]
         public async Task<IActionResult> AssignToEnrollment(int evaluationId, int cohortId) {
@@ -78,9 +107,16 @@ namespace DSI.BcmsServer.Controllers {
             if(id != evaluation.Id) {
                 return BadRequest();
             }
+            // this must be done BEFORE the update
+            var e = await _context.Evaluations.FindAsync(id);
+            _context.Entry(e).State = EntityState.Detached;
 
             evaluation.Updated = Utility.Date.EasternTimeNow;
             _context.Entry(evaluation).State = EntityState.Modified;
+
+            if(!e.IsDone && evaluation.IsDone) {
+                await CreateAssessmentForEvaluationCompletion(evaluation);
+            }
 
             try {
                 await _context.SaveChangesAsync();

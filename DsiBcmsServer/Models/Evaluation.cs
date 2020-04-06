@@ -13,6 +13,9 @@ namespace DSI.BcmsServer.Models {
         [Required]
         public string Description { get; set; }
         public bool IsTemplate { get; set; } = false;
+        public bool IsDone { get; set; } = false;
+        public int PointsAvailable { get; set; } = 0;
+        public int PointsScored { get; set; } = 0;
 
         public virtual IEnumerable<Question> Questions { get; set; }
 

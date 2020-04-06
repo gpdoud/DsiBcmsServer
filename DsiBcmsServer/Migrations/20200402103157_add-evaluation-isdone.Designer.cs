@@ -4,14 +4,16 @@ using DSI.BcmsServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DSI.BcmsServer.Migrations
 {
     [DbContext(typeof(DsiBcmsContext))]
-    partial class DsiBcmsContextModelSnapshot : ModelSnapshot
+    [Migration("20200402103157_add-evaluation-isdone")]
+    partial class addevaluationisdone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,12 +219,6 @@ namespace DSI.BcmsServer.Migrations
 
                     b.Property<bool>("IsTemplate")
                         .HasColumnType("bit");
-
-                    b.Property<int>("PointsAvailable")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PointsScored")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
