@@ -78,13 +78,19 @@ namespace DSI.BcmsServer.Controllers {
         // GET: dsi/Evaluations
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<Evaluation>>> GetEvaluations() {
-            return await _context.Evaluations.ToListAsync();
+            return await _context.Evaluations
+                .Include(x => x.Enrollment)
+                .ThenInclude(x => x.User)
+                .ToListAsync();
         }
 
         // GET: api/Evaluations/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Evaluation>> GetEvaluation(int id) {
-            var evaluation = await _context.Evaluations.FindAsync(id);
+            var evaluation = await _context.Evaluations
+                .Include(x => x.Enrollment)
+                .ThenInclude(x => x.User)
+                .SingleOrDefaultAsync(x => x.Id == id);
 
             if(evaluation == null) {
                 return NotFound();

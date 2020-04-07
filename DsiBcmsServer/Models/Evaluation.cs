@@ -20,7 +20,7 @@ namespace DSI.BcmsServer.Models {
         public virtual IEnumerable<Question> Questions { get; set; }
 
         public int? EnrollmentId { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
         public virtual Enrollment Enrollment { get; set; }
 
         public bool Active { get; set; }
