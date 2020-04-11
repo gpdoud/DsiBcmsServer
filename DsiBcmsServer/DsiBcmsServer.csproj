@@ -4,8 +4,23 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <AssemblyName>DSI.BcmsServer</AssemblyName>
     <RootNamespace>DSI.BcmsServer</RootNamespace>
-    <Configurations>Debug;Release;DebugProd</Configurations>
+    <Configurations>Debug;Release;DebugProd;DevProdBkup</Configurations>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DevProdBkup|AnyCPU'">
+    <DefineConstants>TRACE;PRODBKUPDB</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200329210414_add-evaluation-question.cs" />
+    <Compile Remove="Migrations\20200329210414_add-evaluation-question.Designer.cs" />
+    <Compile Remove="Migrations\20200329211235_v80-assessments-evaluations-questions.cs" />
+    <Compile Remove="Migrations\20200329211235_v80-assessments-evaluations-questions.Designer.cs" />
+    <Compile Remove="Migrations\20200330102321_v80-enrollmentid-to-evaluation.cs" />
+    <Compile Remove="Migrations\20200330102321_v80-enrollmentid-to-evaluation.Designer.cs" />
+    <Compile Remove="Migrations\20200330113537_added-evaluation-istemplate.cs" />
+    <Compile Remove="Migrations\20200330113537_added-evaluation-istemplate.Designer.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="bin\Debug\netcoreapp3.0\logs\nlog.txt" />

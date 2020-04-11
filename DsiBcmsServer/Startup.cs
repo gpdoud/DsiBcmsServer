@@ -37,6 +37,11 @@ namespace DsiBcmsServer {
 #if DEBUG
             connStrKey = "DevDb";
 #endif
+#if DEVPRODBKUP
+            // this is a recent copy of the production database
+            // it can be used to diagnose bugs in the production code
+            connStrKey = "DevProdDb";
+#endif
             services.AddDbContext<DsiBcmsContext>(x => {
                 x.UseLazyLoadingProxies();
                 x.UseSqlServer(Configuration.GetConnectionString(connStrKey));

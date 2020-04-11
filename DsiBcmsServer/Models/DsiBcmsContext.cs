@@ -11,6 +11,8 @@ namespace DSI.BcmsServer.Models {
 
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        public DbSet<Evaluation> Evaluations { get; set; }
+        public DbSet<Question> Questions { get; set; }
         public DbSet<Assessment> Assessments { get; set; }
         public DbSet<Attendance> Attendance { get; set; }
         public DbSet<Cohort> Cohorts { get; set; }
