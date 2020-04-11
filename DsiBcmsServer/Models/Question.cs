@@ -17,17 +17,17 @@ namespace DSI.BcmsServer.Models {
         [StringLength(255)]
         [Required]
         public string QuestionText { get; set; }
-        [StringLength(80)]
+        [StringLength(255)]
         [Required]
         public string AnswerTextA { get; set; }
-        [StringLength(80)]
+        [StringLength(255)]
         [Required]
         public string AnswerTextB { get; set; }
-        [StringLength(80)]
+        [StringLength(255)]
         public string AnswerTextC { get; set; }
-        [StringLength(80)]
+        [StringLength(255)]
         public string AnswerTextD { get; set; }
-        [StringLength(80)]
+        [StringLength(255)]
         public string AnswerTextE { get; set; }
         public AnswerTextType CorrectAnswerNbr { get; set; } = AnswerTextType.NoAnswer;
         public int PointValue { get; set; }
