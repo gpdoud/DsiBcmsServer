@@ -25,8 +25,9 @@ namespace DsiBcmsServer {
         public IConfiguration Configuration { get; }
         private readonly string DefaultCorsPolicy = "_defaultCorsPolicy";
         private string[] AllowedOrigins = { 
-            "http://localhost", "https://localhost",
-            "http://localhost:4200", "https://localhost:4200",
+            "http://127.0.0.1", "https://127.0.0.1", // jQuery
+            "http://127.0.0.1:4200", "https://127.0.0.1:4200", // Angular
+            "http://127.0.0.1:5500", "https://127.0.0.1:5500", // Live Server
             "http://doudsystems.com", "https://doudsystems.com"
         };
         private string[] AllowedMethods = { "GET", "POST", "PUT", "DELETE" };
