@@ -134,6 +134,10 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.Updated);
                 e.HasOne(x => x.User).WithMany(x => x.Feedbacks).HasForeignKey(x => x.UserId);
             });
+            builder.Entity<KbCategory>(e => {
+                e.ToTable("KbCategories");
+                e.HasIndex(x => x.Code).IsUnique();
+            });
         }
 
 

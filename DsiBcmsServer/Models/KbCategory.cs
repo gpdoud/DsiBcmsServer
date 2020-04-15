@@ -10,7 +10,7 @@ namespace DSI.BcmsServer.Models {
 
         public int Id { get; set; }
         [Required]
-        [StringLength(255)]
+        [StringLength(50)]
         public string Code { get; set; }
         [Required]
         [StringLength(255)]
