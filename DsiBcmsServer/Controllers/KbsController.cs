@@ -48,6 +48,7 @@ namespace DSI.BcmsServer.Controllers {
                 return BadRequest();
             }
 
+            kb.Updated = Utility.Date.EasternTimeNow;
             _context.Entry(kb).State = EntityState.Modified;
 
             try {
