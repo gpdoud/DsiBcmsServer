@@ -21,6 +21,7 @@ namespace DSI.BcmsServer.Models {
         public bool Locked { get; set; } = false; // disallow more threads
         public int NextId { get; set; } // for threads
         public int PrevId { get; set; }
+        public string ImagePath1 { get; set; } = null;
 
         public int UserId { get; set; }
         public virtual User User { get; set; }
