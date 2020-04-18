@@ -11,6 +11,8 @@ namespace DSI.BcmsServer.Models {
 
         private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
+        public DbSet<KbCategory> KbCategories { get; set; }
+        public DbSet<Kb> Kbs { get; set; }
         public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Assessment> Assessments { get; set; }
@@ -131,6 +133,10 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.Created).IsRequired();
                 e.Property(x => x.Updated);
                 e.HasOne(x => x.User).WithMany(x => x.Feedbacks).HasForeignKey(x => x.UserId);
+            });
+            builder.Entity<KbCategory>(e => {
+                e.ToTable("KbCategories");
+                e.HasIndex(x => x.Code).IsUnique();
             });
         }
 
