@@ -140,6 +140,8 @@ namespace DSI.BcmsServer.Models {
             });
         }
 
+        public DbSet<DSI.BcmsServer.Models.Commentary> Commentary { get; set; }
+
 
 
     }
