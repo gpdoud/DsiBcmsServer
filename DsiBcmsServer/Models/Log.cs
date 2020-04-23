@@ -14,5 +14,5 @@ namespace DSI.BcmsServer.Models {
 
         public Log() { }
     }
-    public enum LogSeverity { Info, Warn, Error, Fatal };
+    public enum LogSeverity { Info, Warn, Error, Fatal, Trace, Debug };
 }

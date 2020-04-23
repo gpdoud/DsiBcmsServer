@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DSI.BcmsServer.Models;
+using DSI.BcmsServer.ModelViews;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -42,28 +43,45 @@ namespace DSI.BcmsServer.Controllers {
             return await Log(log);
         }
 
-        [HttpPost("info")]
-        public async Task<IActionResult> LogInfo(Log log) {
-            log.Severity = LogSeverity.Info;
+        [HttpPost]
+        private async Task<IActionResult> LogMessage(string message, LogSeverity sev) {
+            var log = new Log { 
+                Id = 0, 
+                Message = message, 
+                Severity = sev, 
+                Timestamp = Utility.Date.EasternTimeNow 
+            };
             return await Log(log);
+        }
+
+        [HttpPost("info")]
+        public async Task<IActionResult> LogInfo(LogMessage lm) {
+            return await LogMessage(lm.Message, LogSeverity.Info);
         }
 
         [HttpPost("warn")]
-        public async Task<IActionResult> LogWarning(Log log) {
-            log.Severity = LogSeverity.Warn;
-            return await Log(log);
+        public async Task<IActionResult> LogWarning(LogMessage lm) {
+            return await LogMessage(lm.Message, LogSeverity.Warn);
         }
 
         [HttpPost("error")]
-        public async Task<IActionResult> LogError(Log log) {
-            log.Severity = LogSeverity.Error;
-            return await Log(log);
+        public async Task<IActionResult> LogError(LogMessage lm) {
+            return await LogMessage(lm.Message, LogSeverity.Error);
         }
 
         [HttpPost("fatal")]
-        public async Task<IActionResult> LogFatal(Log log) {
-            log.Severity = LogSeverity.Fatal;
-            return await Log(log);
+        public async Task<IActionResult> LogFatal(LogMessage lm) {
+            return await LogMessage(lm.Message, LogSeverity.Fatal);
+        }
+
+        [HttpPost("trace")]
+        public async Task<IActionResult> LogTrace(LogMessage lm) {
+            return await LogMessage(lm.Message, LogSeverity.Trace);
+        }
+
+        [HttpPost("debug")]
+        public async Task<IActionResult> LogDebug(LogMessage lm) {
+            return await LogMessage(lm.Message, LogSeverity.Debug);
         }
 
         // POST: api/Logs/Update/5
