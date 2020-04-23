@@ -20,6 +20,10 @@
     <Compile Remove="Migrations\20200330102321_v80-enrollmentid-to-evaluation.Designer.cs" />
     <Compile Remove="Migrations\20200330113537_added-evaluation-istemplate.cs" />
     <Compile Remove="Migrations\20200330113537_added-evaluation-istemplate.Designer.cs" />
+    <Compile Remove="Migrations\20200422201230_Commentary-created.cs" />
+    <Compile Remove="Migrations\20200422201230_Commentary-created.Designer.cs" />
+    <Compile Remove="Migrations\20200422201559_Commentary-created.cs" />
+    <Compile Remove="Migrations\20200422201559_Commentary-created.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,6 +23,7 @@ namespace DSI.BcmsServer.Models {
         public DbSet<Feedback> Feedback { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Commentary> Commentary { get; set; }
 
         public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {
         }
@@ -138,9 +139,19 @@ namespace DSI.BcmsServer.Models {
                 e.ToTable("KbCategories");
                 e.HasIndex(x => x.Code).IsUnique();
             });
-        }
+            builder.Entity<Commentary>(e => {
+                e.ToTable("Commentaries");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.UserId).IsRequired();
+                e.Property(x => x.Text).HasMaxLength(5000).IsRequired();
+                e.Property(x => x.Created).IsRequired();
+                e.Property(x => x.LastAcessUserId);
+                e.Property(x => x.Updated);
+                e.HasOne(x => x.User).WithMany(x => x.Commentaries).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
 
-        public DbSet<DSI.BcmsServer.Models.Commentary> Commentary { get; set; }
+
+            });
+        }
 
 
 

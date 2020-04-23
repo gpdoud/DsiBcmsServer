@@ -30,6 +30,8 @@ namespace DSI.BcmsServer.Models {
         public virtual IEnumerable<Cohort> Cohorts { get; set; }
         [JsonIgnore]
         public virtual IEnumerable<Feedback> Feedbacks { get; set; }
+        [JsonIgnore]
+        public virtual IEnumerable<Commentary> Commentaries { get; set; }
 
         public User() { }
     }
