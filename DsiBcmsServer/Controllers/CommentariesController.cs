@@ -9,7 +9,7 @@ using DSI.BcmsServer.Models;
 
 namespace DSI.BcmsServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("dsi/[controller]")]
     [ApiController]
     public class CommentariesController : ControllerBase
     {
