@@ -11,11 +11,14 @@ namespace DSI.BcmsServer.Models
         public int Id { get; set; }
         public int StudentId { get; set; }
         public string Text { get; set; }
+        public bool Sensitive { get; set; } = false;
         public int? LastAcessUserId { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
         [JsonIgnore]
-        public virtual User Student { get; set; } 
+        public virtual User Student { get; set; }
+        [JsonIgnore]
+        public virtual User User { get; set; }
 
 
 
