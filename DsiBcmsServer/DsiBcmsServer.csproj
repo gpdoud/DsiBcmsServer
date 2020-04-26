@@ -24,6 +24,8 @@
     <Compile Remove="Migrations\20200422201230_Commentary-created.Designer.cs" />
     <Compile Remove="Migrations\20200422201559_Commentary-created.cs" />
     <Compile Remove="Migrations\20200422201559_Commentary-created.Designer.cs" />
+    <Compile Remove="Migrations\20200426194938_JSONignore-onUser-inCommentary.cs" />
+    <Compile Remove="Migrations\20200426194938_JSONignore-onUser-inCommentary.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

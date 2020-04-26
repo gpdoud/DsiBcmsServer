@@ -142,12 +142,12 @@ namespace DSI.BcmsServer.Models {
             builder.Entity<Commentary>(e => {
                 e.ToTable("Commentaries");
                 e.HasKey(x => x.Id);
-                e.Property(x => x.UserId).IsRequired();
+                e.Property(x => x.StudentId).IsRequired();
                 e.Property(x => x.Text).HasMaxLength(5000).IsRequired();
                 e.Property(x => x.Created).IsRequired();
                 e.Property(x => x.LastAcessUserId);
                 e.Property(x => x.Updated);
-                e.HasOne(x => x.User).WithMany(x => x.Commentaries).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+                e.HasOne(x => x.Student).WithMany(x => x.Commentaries).HasForeignKey(x => x.StudentId).OnDelete(DeleteBehavior.Restrict);
 
 
             });
