@@ -108,7 +108,7 @@ namespace DSI.BcmsServer.Controllers
 
 
 
-        // POST: dsi/Users/Update/5
+        // POST: dsi/Commentaries/Update/5
         // To get around problem with Put and Delete
         [HttpPost("update/{id}")]
         public async Task<IActionResult> UpdateCommentary(int id, Commentary commentary){
@@ -117,6 +117,15 @@ namespace DSI.BcmsServer.Controllers
 
         }
 
+        // POST: dsi/Commentaries/Delete/5
+        // To get around problem with Put and Delete
+        [HttpPost("delete/{id}")]
+        public async Task<ActionResult<Commentary>> RemoveCommentary(int id)
+        {
+
+            return await DeleteCommentary(id);
+
+        }
 
     }
 }
