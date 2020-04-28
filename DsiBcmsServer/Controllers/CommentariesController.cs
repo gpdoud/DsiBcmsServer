@@ -105,5 +105,18 @@ namespace DSI.BcmsServer.Controllers
         {
             return _context.Commentary.Any(e => e.Id == id);
         }
+
+
+
+        // POST: dsi/Users/Update/5
+        // To get around problem with Put and Delete
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> UpdateCommentary(int id, Commentary commentary){
+
+         return await PutCommentary(id, commentary);
+
+        }
+
+
     }
 }
