@@ -46,6 +46,9 @@ namespace DsiBcmsServer {
             // it can be used to diagnose bugs in the production code
             connStrKey = "DevProdDb";
 #endif
+#if STAGE
+            connStrKey = "StageDb";
+#endif
             services.AddDbContext<DsiBcmsContext>(x => {
                 x.UseLazyLoadingProxies();
                 x.UseSqlServer(Configuration.GetConnectionString(connStrKey));
