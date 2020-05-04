@@ -4,14 +4,16 @@ using DSI.BcmsServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DSI.BcmsServer.Migrations
 {
     [DbContext(typeof(DsiBcmsContext))]
-    partial class DsiBcmsContextModelSnapshot : ModelSnapshot
+    [Migration("20200420175723_v1.0-added-log")]
+    partial class v10addedlog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,41 +138,6 @@ namespace DSI.BcmsServer.Migrations
                     b.HasIndex("InstructorId");
 
                     b.ToTable("Cohorts");
-                });
-
-            modelBuilder.Entity("DSI.BcmsServer.Models.Commentary", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("LastAcessUserId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Sensitive")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LastAcessUserId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Commentaries");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Config", b =>
@@ -632,20 +599,6 @@ namespace DSI.BcmsServer.Migrations
                         .WithMany("Cohorts")
                         .HasForeignKey("InstructorId")
                         .OnDelete(DeleteBehavior.NoAction);
-                });
-
-            modelBuilder.Entity("DSI.BcmsServer.Models.Commentary", b =>
-                {
-                    b.HasOne("DSI.BcmsServer.Models.User", "User")
-                        .WithMany("Commentaries")
-                        .HasForeignKey("LastAcessUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("DSI.BcmsServer.Models.User", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Enrollment", b =>
