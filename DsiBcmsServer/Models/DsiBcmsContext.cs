@@ -147,14 +147,10 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.Text).IsRequired();
                 e.Property(x => x.Sensitive).IsRequired();
                 e.Property(x => x.Created).IsRequired();
-                e.Property(x => x.LastAcessUserId);
+                e.Property(x => x.LastAccessUserId);
                 e.Property(x => x.Updated);
-                e.HasOne(x => x.User).WithMany(x => x.Commentaries).HasForeignKey(x => x.StudentId).OnDelete(DeleteBehavior.Cascade);
-                e.HasOne(x => x.User).WithMany(x => x.Commentaries).HasForeignKey(x => x.LastAcessUserId).OnDelete(DeleteBehavior.Restrict);
-
-
-
-
+                e.HasOne(x => x.Student).WithMany(x => x.StudentCommentaries).HasForeignKey(x => x.StudentId).OnDelete(DeleteBehavior.Cascade);
+                e.HasOne(x => x.LastAccessUser).WithMany(x => x.LastAccessUserCommentaries).HasForeignKey(x => x.LastAccessUserId).OnDelete(DeleteBehavior.Restrict);
             });
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -30,7 +31,10 @@ namespace DSI.BcmsServer.Models {
         public virtual IEnumerable<Cohort> Cohorts { get; set; }
         [JsonIgnore]
         public virtual IEnumerable<Feedback> Feedbacks { get; set; }
-        public virtual IEnumerable<Commentary> Commentaries { get; set; }
+        [JsonIgnore]
+        public virtual IEnumerable<Commentary> StudentCommentaries { get; set; }
+        [JsonIgnore]
+        public virtual IEnumerable<Commentary> LastAccessUserCommentaries { get; set; }
 
         public User() { }
     }

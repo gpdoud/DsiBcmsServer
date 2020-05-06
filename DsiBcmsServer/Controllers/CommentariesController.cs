@@ -32,6 +32,7 @@ namespace DSI.BcmsServer.Controllers
         public async Task<ActionResult<Commentary>> GetCommentary(int id)
         {
             var commentary = await _context.Commentary.FindAsync(id);
+            //commentary.LastAccessUser = await _context.Users.FindAsync(commentary.LastAccessUserId);
 
             if (commentary == null)
             {
