@@ -31,6 +31,8 @@ namespace DSI.BcmsServer.Models {
             Id = 0;
             Description = fromEval.Description;
             EnrollmentId = enrollId;
+            PointsAvailable = fromEval.PointsAvailable;
+            PointsScored = fromEval.PointsScored;
             Active = true;
             Created = fromEval.Created;
             Updated = fromEval.Updated;

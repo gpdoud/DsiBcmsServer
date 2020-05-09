@@ -24,6 +24,7 @@ namespace DSI.BcmsServer.Models {
         public DbSet<Feedback> Feedback { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Commentary> Commentary { get; set; }
 
         public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {
         }
@@ -138,6 +139,18 @@ namespace DSI.BcmsServer.Models {
             builder.Entity<KbCategory>(e => {
                 e.ToTable("KbCategories");
                 e.HasIndex(x => x.Code).IsUnique();
+            });
+            builder.Entity<Commentary>(e => {
+                e.ToTable("Commentaries");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.StudentId).IsRequired();
+                e.Property(x => x.Text).IsRequired();
+                e.Property(x => x.Sensitive).IsRequired();
+                e.Property(x => x.Created).IsRequired();
+                e.Property(x => x.LastAccessUserId);
+                e.Property(x => x.Updated);
+                e.HasOne(x => x.Student).WithMany(x => x.StudentCommentaries).HasForeignKey(x => x.StudentId).OnDelete(DeleteBehavior.Cascade);
+                e.HasOne(x => x.LastAccessUser).WithMany(x => x.LastAccessUserCommentaries).HasForeignKey(x => x.LastAccessUserId).OnDelete(DeleteBehavior.Restrict);
             });
         }
 
