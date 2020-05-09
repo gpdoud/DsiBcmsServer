@@ -4,14 +4,16 @@ using DSI.BcmsServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DSI.BcmsServer.Migrations
 {
     [DbContext(typeof(DsiBcmsContext))]
-    partial class DsiBcmsContextModelSnapshot : ModelSnapshot
+    [Migration("20200424131503_switched User to Student in Commentary")]
+    partial class switchedUsertoStudentinCommentary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,25 +150,21 @@ namespace DSI.BcmsServer.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("LastAccessUserId")
+                    b.Property<int?>("LastAcessUserId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Sensitive")
-                        .HasColumnType("bit");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(5000);
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LastAccessUserId");
 
                     b.HasIndex("StudentId");
 
@@ -408,27 +406,6 @@ namespace DSI.BcmsServer.Migrations
                     b.ToTable("KbCategories");
                 });
 
-            modelBuilder.Entity("DSI.BcmsServer.Models.Log", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Severity")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Logs");
-                });
-
             modelBuilder.Entity("DSI.BcmsServer.Models.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -636,15 +613,10 @@ namespace DSI.BcmsServer.Migrations
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Commentary", b =>
                 {
-                    b.HasOne("DSI.BcmsServer.Models.User", "LastAccessUser")
-                        .WithMany("LastAccessUserCommentaries")
-                        .HasForeignKey("LastAccessUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("DSI.BcmsServer.Models.User", "Student")
-                        .WithMany("StudentCommentaries")
+                        .WithMany("Commentaries")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
