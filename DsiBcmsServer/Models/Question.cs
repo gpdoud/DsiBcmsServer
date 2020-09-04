@@ -36,6 +36,7 @@ namespace DSI.BcmsServer.Models {
         public int EvaluationId { get; set; }
         [JsonIgnore]
         public virtual Evaluation Evaluation { get; set; }
+        public bool IsBonus { get; set; }
 
         public bool Active { get; set; } = true;
         public DateTime Created { get; set; } = DateTime.Now;
@@ -53,6 +54,7 @@ namespace DSI.BcmsServer.Models {
             CorrectAnswerNbr = q.CorrectAnswerNbr;
             PointValue = q.PointValue;
             UserAnswerNbr = q.UserAnswerNbr;
+            IsBonus = q.IsBonus;
             EvaluationId = evaluationId;
             Active = q.Active;
             Created = q.Created;
