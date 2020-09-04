@@ -6,6 +6,7 @@
     <RootNamespace>DSI.BcmsServer</RootNamespace>
     <Configurations>Debug;Release;DebugProd;DevProdBkup;Stage</Configurations>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <UserSecretsId>117478f0-5f00-4343-ae0e-76d1003436aa</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DevProdBkup|AnyCPU'">
