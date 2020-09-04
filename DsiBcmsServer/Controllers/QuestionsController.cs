@@ -21,7 +21,8 @@ namespace DSI.BcmsServer.Controllers
         private async Task<IActionResult> RecalcPoints(int evaluationId) {
             var e = await _context.Evaluations.FindAsync(evaluationId);
             e.PointsAvailable = _context.Questions
-                .Where(q => q.EvaluationId == evaluationId)
+                // added !q.IsBonus to eliminate bonus questions from grade calc
+                .Where(q => q.EvaluationId == evaluationId && !q.IsBonus)
                 .Sum(q => q.PointValue);
             e.PointsScored = _context.Questions
                 .Where(q => q.EvaluationId == evaluationId && q.CorrectAnswerNbr == q.UserAnswerNbr)
