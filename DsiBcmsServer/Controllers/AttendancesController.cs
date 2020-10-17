@@ -68,28 +68,53 @@ namespace DSI.BcmsServer.Controllers {
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
             if(enrollment == null) return NotFound();
             var now = Date.EasternTimeNow;
-            // check if SOMEHOW, a student has multiple check records
-            var count = _context.Attendance.CountAsync(x => x.EnrollmentId == enrollment.Id
-                                && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
-                                && x.Out == null);
-            if(count.Result > 1) {
-                logger.Error("ERROR: CohortId {0}, EnrollmentId {1}, StudentId {2} has {3} attendance records!",
-                                cohortId, enrollment.Id, studentId, count);
-            }
             // if attendance is found; student is already checked in
             // if null, not checked in
-            var attnd = await _context.Attendance
-                            .SingleOrDefaultAsync(x => x.EnrollmentId == enrollment.Id
+            /*
+             * Bugfix for multiple checkins without a checkout
+             * Retrieve all attendance records for the day
+             * If there are none, no checkin has been done
+             * If there is 1, a normal checkin has been done
+             * If there are more than 1, this is an error 
+             * - log the error
+             * - return the first one
+             */
+            var attnds = await _context.Attendance
+                            .Where(x => x.EnrollmentId == enrollment.Id
                                 && x.In.Year == now.Year && x.In.Month == now.Month && x.In.Day == now.Day
-                                && x.Out == null);
-            return attnd;
+                                && x.Out == null)
+                            .ToListAsync();
+            if(attnds.Count > 1) {
+                var attnd = attnds[0];
+                _context.Logs.Add(new Models.Log() {
+                    Id = 0,
+                    Message = $"ERROR: More than 1 checking for " +
+                                $"student {studentId} on date {attnd.In.Month}/{attnd.In.Day}/{attnd.In.Year} ",
+                    Severity = LogSeverity.Error,
+                    Timestamp = Utility.Date.EasternTimeNow
+                });
+                await _context.SaveChangesAsync();
+                await RemoveDuplicateCheckins(attnds);
+            }
+            // if there are no attendance records, return null
+            // if there are 1 or more, return the first one
+            return attnds.Count == 0 ? null : attnds[0];
+
+        }
+
+        private async Task RemoveDuplicateCheckins(List<Attendance> attendances) {
+            // skip the first one
+            for(var idx = 1; idx < attendances.Count; idx++) {
+                _context.Attendance.Remove(attendances[idx]);
+            }
+            await _context.SaveChangesAsync();
         }
 
         // POST: dsi/Attendances/checkin/{cohortId}/{studendId}
         [HttpPost("checkin/{cohortId}/{studentId}")]
         public async Task<ActionResult<Attendance>> Checkin(int cohortId, int studentId, Attendance attnd) {
             logger.Trace("Attendance.CheckedIn: parms cohortId({0}), studentId({1})", cohortId, studentId);
-            var student = _context.Users.Find(studentId);
+            var student = await _context.Users.FindAsync(studentId);
             logger.Debug("CheckIn(): Checking in {0} {1}", student.Firstname, student.Lastname);
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
@@ -122,7 +147,7 @@ namespace DSI.BcmsServer.Controllers {
         [HttpPost("checkout/{cohortId}/{studentId}")]
         public async Task<IActionResult> Checkout(int cohortId, int studentId, Attendance attnd) {
             logger.Trace("Attendance.CheckedOut: parms cohortId({0}), studentId({1})", cohortId, studentId);
-            var student = _context.Users.Find(studentId);
+            var student = await _context.Users.FindAsync(studentId);
             logger.Debug("CheckOut(): Checking out {0} {1}", student.Firstname, student.Lastname);
             var enrollment = await _context.Enrollments
                              .SingleOrDefaultAsync(x => x.CohortId == cohortId && x.UserId == studentId);
