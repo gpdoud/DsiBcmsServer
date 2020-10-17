@@ -49,12 +49,14 @@ namespace DSI.BcmsServer.Controllers {
         // POST: dsi/Evaluations/Assign/5/9
         [HttpPost("assign/{evaluationId}/{cohortId}")]
         public async Task<IActionResult> AssignToEnrollment(int evaluationId, int cohortId) {
+            var cohort = await _context.Cohorts.FindAsync(cohortId);
             var evaluation = await _context.Evaluations.FindAsync(evaluationId);
             var enrollmentIds = await _context.Enrollments.Where(x => x.CohortId == cohortId).Select(x => x.Id).ToListAsync();
             var evals_created = 0;
             foreach(var enrollmentId in enrollmentIds) {
                 // copy the evaluation
                 var eval = new Evaluation(evaluation, enrollmentId);
+                eval.UserId = cohort.InstructorId;
                 await _context.Evaluations.AddAsync(eval);
                 await _context.SaveChangesAsync();
                 // copy the questions

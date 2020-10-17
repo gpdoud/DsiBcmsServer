@@ -23,6 +23,9 @@ namespace DSI.BcmsServer.Models {
         //[JsonIgnore]
         public virtual Enrollment Enrollment { get; set; }
 
+        public int? UserId { get; set; }
+        public virtual User User { get; set; }
+
         public bool Active { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
         public DateTime? Updated { get; set; }
@@ -33,6 +36,7 @@ namespace DSI.BcmsServer.Models {
             EnrollmentId = enrollId;
             PointsAvailable = fromEval.PointsAvailable;
             PointsScored = fromEval.PointsScored;
+            UserId = fromEval.UserId;
             Active = true;
             Created = fromEval.Created;
             Updated = fromEval.Updated;
