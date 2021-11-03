@@ -27,7 +27,7 @@ namespace DSI.BcmsServer.Controllers {
                             on u.Id equals e.UserId
                          join c in _context.Cohorts
                             on e.CohortId equals c.Id
-                         where u.Id == id
+                         where u.Id == id && c.Active
                          select new { StudentId = u.Id, StudentLastName = u.Lastname, CohortId = c.Id, CohortName = c.Name };
             var result = await cohort.FirstOrDefaultAsync();
             if(result == null) return NotFound();
