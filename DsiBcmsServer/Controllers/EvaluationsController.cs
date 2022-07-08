@@ -46,6 +46,26 @@ namespace DSI.BcmsServer.Controllers {
             return await evals;
         }
 
+        // POST: dsi/Evaluations/Assign/Eval/{evalId}/Cohort/{cohortId}/user/{userId}
+        [HttpPost("assign/cohort/{cohortId}/user/{userId}/eval/{evalId}/")]
+        public async Task<IActionResult> AssignToStudents(int cohortId, int userId, int evalId) {
+            var cohort = await _context.Cohorts.FindAsync(cohortId);
+            var evalTemplate = await _context.Evaluations.FindAsync(evalId);
+            var enrollment = await _context.Enrollments.SingleOrDefaultAsync(e => e.CohortId == cohortId && e.UserId == userId);
+            // copy the evaluation
+            var eval = new Evaluation(evalTemplate, enrollment.Id);
+            eval.UserId = cohort.InstructorId;
+            await _context.Evaluations.AddAsync(eval);
+            await _context.SaveChangesAsync();
+            // copy the questions
+            foreach (var question in evalTemplate.Questions) {
+                var quest = new Question(question, eval.Id);
+                var newQuest = await _context.Questions.AddAsync(quest);
+            }
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
         // POST: dsi/Evaluations/Assign/5/9
         [HttpPost("assign/{evaluationId}/{cohortId}")]
         public async Task<IActionResult> AssignToEnrollment(int evaluationId, int cohortId) {
