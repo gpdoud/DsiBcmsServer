@@ -49,6 +49,9 @@ namespace DsiBcmsServer {
 #if STAGE
             connStrKey = "StageDb";
 #endif
+#if RIPPER
+            connStrKey = "RipperDb";
+#endif
             services.AddDbContext<DsiBcmsContext>(x => {
                 x.UseLazyLoadingProxies();
                 x.UseSqlServer(Configuration.GetConnectionString(connStrKey));
