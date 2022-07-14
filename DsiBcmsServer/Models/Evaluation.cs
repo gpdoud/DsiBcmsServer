@@ -17,6 +17,9 @@ namespace DSI.BcmsServer.Models {
         public int PointsAvailable { get; set; } = 0;
         public int PointsScored { get; set; } = 0;
 
+        public int TimeLimitMinutes { get; set; } = 0;
+        public int TimeLimitSeconds { get; set; } = 0;
+
         public virtual IEnumerable<Question> Questions { get; set; }
 
         public int? EnrollmentId { get; set; }
@@ -36,6 +39,8 @@ namespace DSI.BcmsServer.Models {
             EnrollmentId = enrollId;
             PointsAvailable = fromEval.PointsAvailable;
             PointsScored = fromEval.PointsScored;
+            TimeLimitMinutes = fromEval.TimeLimitMinutes;
+            TimeLimitSeconds = fromEval.TimeLimitSeconds;
             UserId = fromEval.UserId;
             Active = true;
             Created = fromEval.Created;
