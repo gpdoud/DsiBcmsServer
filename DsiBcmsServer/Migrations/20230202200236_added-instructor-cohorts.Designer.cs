@@ -4,6 +4,7 @@ using DSI.BcmsServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DSI.BcmsServer.Migrations
 {
     [DbContext(typeof(DsiBcmsContext))]
-    partial class DsiBcmsContextModelSnapshot : ModelSnapshot
+    [Migration("20230202200236_added-instructor-cohorts")]
+    partial class addedinstructorcohorts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,7 +291,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Evaluations", (string)null);
+                    b.ToTable("Evaluations");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Feedback", b =>
@@ -419,7 +421,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Kbs", (string)null);
+                    b.ToTable("Kbs");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.KbCategory", b =>
@@ -476,7 +478,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs", (string)null);
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Question", b =>
@@ -547,7 +549,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasIndex("EvaluationId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Role", b =>

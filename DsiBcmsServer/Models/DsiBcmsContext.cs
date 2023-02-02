@@ -25,6 +25,7 @@ namespace DSI.BcmsServer.Models {
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Commentary> Commentary { get; set; }
+        public DbSet<InstructorCohort> InstructorCohorts { get; set; }
 
         public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {
         }
@@ -85,7 +86,6 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.DemoDay);
                 e.Property(x => x.Capacity);
                 e.HasKey(x => x.Id);
-                e.HasOne(x => x.Instructor).WithMany(x => x.Cohorts).HasForeignKey(x => x.InstructorId).OnDelete(DeleteBehavior.NoAction);
                 e.HasMany(x => x.Enrollments).WithOne(x => x.Cohort);
             });
             builder.Entity<Enrollment>(e => {
@@ -152,9 +152,16 @@ namespace DSI.BcmsServer.Models {
                 e.HasOne(x => x.Student).WithMany(x => x.StudentCommentaries).HasForeignKey(x => x.StudentId).OnDelete(DeleteBehavior.Cascade);
                 e.HasOne(x => x.LastAccessUser).WithMany(x => x.LastAccessUserCommentaries).HasForeignKey(x => x.LastAccessUserId).OnDelete(DeleteBehavior.Restrict);
             });
+
+            builder.Entity<InstructorCohort>(e => {
+                e.ToTable("InstructorCohorts");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.InstructorId).IsRequired();
+                e.HasOne(x => x.Instructor).WithMany(x => x.InstructorCohorts).HasForeignKey(x => x.InstructorId);
+                e.Property(x => x.CohortId).IsRequired();
+                e.HasOne(x => x.Cohort).WithMany(x => x.InstructorCohorts).HasForeignKey(x => x.CohortId);
+            });
         }
-
-
 
     }
 }
