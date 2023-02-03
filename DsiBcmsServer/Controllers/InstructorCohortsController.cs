@@ -37,7 +37,7 @@ namespace DSI.BcmsServer.Controllers {
 
         // PUT: api/InstructorCohorts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPost("update/{id}")]
         public async Task<IActionResult> PutInstructorCohort(int id, InstructorCohort instructorCohort) {
             if (id != instructorCohort.Id) {
                 return BadRequest();
@@ -69,7 +69,7 @@ namespace DSI.BcmsServer.Controllers {
         }
 
         // DELETE: api/InstructorCohorts/5
-        [HttpDelete("{id}")]
+        [HttpPost("delete/{id}")]
         public async Task<IActionResult> DeleteInstructorCohort(int id) {
             var instructorCohort = await _context.InstructorCohorts.FindAsync(id);
             if (instructorCohort == null) {

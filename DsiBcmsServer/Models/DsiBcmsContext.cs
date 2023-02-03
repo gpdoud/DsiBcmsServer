@@ -157,9 +157,15 @@ namespace DSI.BcmsServer.Models {
                 e.ToTable("InstructorCohorts");
                 e.HasKey(x => x.Id);
                 e.Property(x => x.InstructorId).IsRequired();
-                e.HasOne(x => x.Instructor).WithMany(x => x.InstructorCohorts).HasForeignKey(x => x.InstructorId);
+                e.HasOne(x => x.Instructor)
+                    .WithMany(x => x.InstructorCohorts)
+                    .HasForeignKey(x => x.InstructorId)
+                    .OnDelete(DeleteBehavior.NoAction);
                 e.Property(x => x.CohortId).IsRequired();
-                e.HasOne(x => x.Cohort).WithMany(x => x.InstructorCohorts).HasForeignKey(x => x.CohortId);
+                e.HasOne(x => x.Cohort)
+                    .WithMany(x => x.InstructorCohorts)
+                    .HasForeignKey(x => x.CohortId)
+                    .OnDelete(DeleteBehavior.NoAction);
             });
         }
 
