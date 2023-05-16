@@ -35,6 +35,21 @@ namespace DSI.BcmsServer.Controllers {
             return cohort;
         }
 
+        // GET: api/Cohorts/Instructors/5
+        [HttpGet("instructors/{cohortId}")]
+        public async Task<ActionResult<Cohort>> GetInstructorsForCohort(int cohortId) {
+            var cohort = await _context.Cohorts
+                                        .Include(x => x.InstructorCohorts)
+                                        .ThenInclude(x => x.Instructor)
+                                        .SingleOrDefaultAsync(x => x.Id == cohortId);
+
+            if (cohort == null) {
+                return NotFound();
+            }
+
+            return cohort;
+        }
+
         [HttpPost("update/{id}")]
         public async Task<IActionResult> PostUpdateCohort(int id, Cohort cohort) {
             return await PutCohort(id, cohort);
