@@ -20,13 +20,17 @@ namespace DSI.BcmsServer.Controllers {
         // GET: api/InstructorCohorts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<InstructorCohort>>> GetInstructorCohort() {
-            return await _context.InstructorCohorts.ToListAsync();
+            return await _context.InstructorCohorts
+                                    .Include(x => x.Instructor)
+                                    .ToListAsync();
         }
 
         // GET: api/InstructorCohorts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<InstructorCohort>> GetInstructorCohort(int id) {
-            var instructorCohort = await _context.InstructorCohorts.FindAsync(id);
+            var instructorCohort = await _context.InstructorCohorts
+                                                    .Include(x => x.Instructor)
+                                                    .SingleOrDefaultAsync(x => x.Id == id);
 
             if (instructorCohort == null) {
                 return NotFound();
