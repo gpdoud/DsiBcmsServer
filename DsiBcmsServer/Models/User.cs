@@ -35,6 +35,8 @@ namespace DSI.BcmsServer.Models {
         public virtual IEnumerable<Commentary> StudentCommentaries { get; set; }
         [JsonIgnore]
         public virtual IEnumerable<Commentary> LastAccessUserCommentaries { get; set; }
+        [JsonIgnore]
+        public virtual IEnumerable<InstructorCohort> InstructorCohorts { get; set; }
 
         public User() { }
     }
