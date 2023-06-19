@@ -46,8 +46,8 @@ namespace DsiBcmsServer {
             // it can be used to diagnose bugs in the production code
             connStrKey = "DevProdDb";
 #endif
-#if STAGE
-            connStrKey = "StageDb";
+#if AZURE
+            connStrKey = "AzureDb";
 #endif
 #if RIPPER
             connStrKey = "RipperDb";

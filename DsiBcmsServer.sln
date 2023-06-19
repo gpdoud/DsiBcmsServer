@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DsiBcmsServer", "DsiBcmsSer
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Azure|Any CPU = Azure|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		DevProdBkup|Any CPU = DevProdBkup|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -14,6 +15,8 @@ Global
 		Stage|Any CPU = Stage|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0CDA02FB-1965-4A21-AAC8-03D7563A40BA}.Azure|Any CPU.ActiveCfg = Azure|Any CPU
+		{0CDA02FB-1965-4A21-AAC8-03D7563A40BA}.Azure|Any CPU.Build.0 = Azure|Any CPU
 		{0CDA02FB-1965-4A21-AAC8-03D7563A40BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0CDA02FB-1965-4A21-AAC8-03D7563A40BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CDA02FB-1965-4A21-AAC8-03D7563A40BA}.DevProdBkup|Any CPU.ActiveCfg = DevProdBkup|Any CPU
