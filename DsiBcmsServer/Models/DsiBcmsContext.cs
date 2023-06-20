@@ -26,6 +26,8 @@ namespace DSI.BcmsServer.Models {
         public DbSet<User> Users { get; set; }
         public DbSet<Commentary> Commentary { get; set; }
         public DbSet<InstructorCohort> InstructorCohorts { get; set; }
+        public DbSet<Calendar> Calendars { get; set; }
+        public DbSet<CalendarDay> CalendarDays { get; set; }
 
         public DsiBcmsContext(DbContextOptions<DsiBcmsContext> context) : base(context) {
         }
@@ -87,6 +89,9 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.Capacity);
                 e.HasKey(x => x.Id);
                 e.HasMany(x => x.Enrollments).WithOne(x => x.Cohort);
+                //e.HasOne(x => x.Calendar)
+                //    .WithOne(x => x.Cohort);
+                //    .HasForeignKey("Cohort", "CalendarId");
             });
             builder.Entity<Enrollment>(e => {
                 e.ToTable("Enrollments");
@@ -166,6 +171,35 @@ namespace DSI.BcmsServer.Models {
                     .WithMany(x => x.InstructorCohorts)
                     .HasForeignKey(x => x.CohortId)
                     .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            builder.Entity<Calendar>(e => {
+                e.ToTable("Calendars");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Description).HasMaxLength(255);
+                e.Property(x => x.StartDate);
+                e.Property(x => x.EndDate);
+                e.Property(x => x.GraduationDate);
+                e.Property(x => x.Active).IsRequired();
+                e.Property(x => x.Created);
+                e.Property(x => x.Updated);
+            });
+
+            builder.Entity<CalendarDay>(e => {
+                e.ToTable("CalendarDays");
+                e.HasKey(x => x.Id);
+                e.Property(x => x.Date);
+                e.Property(x => x.Notes);
+                e.Property(x => x.Topic);
+                e.Property(x => x.Subtopic);
+                e.Property(x => x.WeekNbr);
+                e.Property(x => x.DayNbr);
+                e.Property(x => x.AssessmentToday).HasMaxLength(50);
+                e.Property(x => x.NoClassToday);
+                e.HasOne(x => x.Calendar)
+                    .WithMany(x => x.CalendarDays)
+                    .HasForeignKey(x => x.CalendarId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
 
