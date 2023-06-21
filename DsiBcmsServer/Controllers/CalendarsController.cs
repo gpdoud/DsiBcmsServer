@@ -16,6 +16,23 @@ namespace DSI.BcmsServer.Controllers {
         public CalendarsController(DsiBcmsContext context) {
             _context = context;
         }
+        // GET: api/Calendars/userId
+        [HttpGet("student/{userId}")]
+        public async Task<ActionResult<Calendar>> GetCalendarForStudentId(int userId) {
+            var calendar = from u in _context.Users
+                           join e in _context.Enrollments
+                               on u.Id equals e.UserId
+                           join c in _context.Cohorts
+                               on e.CohortId equals c.Id
+                           join cal in _context.Calendars
+                               on c.CalendarId equals cal.Id
+                           where u.Id == userId
+                           select cal;
+            
+            return await calendar.FirstOrDefaultAsync();
+
+        }
+
 
         // GET: api/Calendars
         [HttpGet]
