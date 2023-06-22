@@ -25,4 +25,23 @@ public class CalendarDay {
     public bool Active { get; set; } = true;
     public DateTime? Created { get; set; } = null;
     public DateTime? Updated { get; set; } = null;
+
+    public CalendarDay Clone() {
+        var calday = new CalendarDay {
+            Id = 0,
+            Date = this.Date,
+            Notes = this.Notes,
+            Topic = this.Topic,
+            Subtopic = this.Subtopic,
+            WeekNbr = this.WeekNbr,
+            DayNbr = this.DayNbr,
+            AssessmentToday = this.AssessmentToday,
+            GraduationToday = this.GraduationToday,
+            NoClassToday = this.NoClassToday,
+            // leave calendarId at zero
+            Active = this.Active,
+            Created = Utility.Date.EasternTimeNow,
+        };
+        return calday;
+    }
 }

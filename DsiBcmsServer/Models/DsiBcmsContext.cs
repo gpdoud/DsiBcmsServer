@@ -199,7 +199,7 @@ namespace DSI.BcmsServer.Models {
                 e.HasOne(x => x.Calendar)
                     .WithMany(x => x.CalendarDays)
                     .HasForeignKey(x => x.CalendarId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
 

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DSI.BcmsServer.Models;
+using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 
 namespace DSI.BcmsServer.Controllers {
     [Route("dsi/[controller]")]
@@ -16,6 +18,66 @@ namespace DSI.BcmsServer.Controllers {
         public CalendarsController(DsiBcmsContext context) {
             _context = context;
         }
+
+        // POST: api/calendars/clone/5/2023-08-27
+        [HttpPost("clone/{srcCalendarId}/{startDateStr}")]
+        public async Task<ActionResult<Calendar>> CloneCalendar(int srcCalendarId, string startDateStr) {
+            if(srcCalendarId == 0 || startDateStr == null) {
+                return BadRequest();
+            }
+            var srcCalendar = await _context.Calendars
+                                                .Include(x => x.CalendarDays)
+                                                .SingleOrDefaultAsync(x => x.Id == srcCalendarId);
+            if(srcCalendar == null) {
+                return NotFound();
+            }
+            DateTime startDate;
+            if (!DateTime.TryParse(startDateStr, out startDate)) {
+                throw new ArgumentException("StartDate cannot be parsed!");
+            }
+ 
+            var newCalendar = await CloneCalendar(srcCalendar, startDate);
+            await CloneCalendarDays(srcCalendar, newCalendar);
+            return newCalendar;
+        }
+
+        private async Task<Calendar> CloneCalendar(Calendar srcCalendar, DateTime startDate) {
+            var newCalendar = srcCalendar.Clone();
+            newCalendar.StartDate = startDate;
+            newCalendar.Description = srcCalendar.Description + " CLONED";
+            _context.Calendars.Add(newCalendar);
+            await _context.SaveChangesAsync();
+            return newCalendar;
+        }
+        
+        private async Task CloneCalendarDays(Calendar fromCalendar, Calendar toCalendar, bool isSaTValid = false) {
+            var nextDate = (DateTime) toCalendar.StartDate;
+            foreach(var day in fromCalendar.CalendarDays) {
+                var newday = day.Clone();
+                newday.CalendarId = toCalendar.Id;
+                newday.Date = nextDate;
+
+                _context.CalendarDays.Add(newday);
+                await _context.SaveChangesAsync();
+
+                nextDate = GetNextValidDate(nextDate, isSaTValid);
+            }
+            return;
+        }
+
+        private DateTime GetNextValidDate(DateTime date, bool satValid) {
+            var nextDate = date.AddDays(1);
+            if(nextDate.DayOfWeek == DayOfWeek.Saturday) {
+                if(satValid) {
+                    return nextDate;
+                } 
+                return nextDate.AddDays(2);
+            } else if(nextDate.DayOfWeek == DayOfWeek.Sunday) {
+                return nextDate.AddDays(1);
+            }
+            return nextDate;
+        }
+
         // GET: api/Calendars/userId
         [HttpGet("student/{userId}")]
         public async Task<ActionResult<Calendar>> GetCalendarForStudentId(int userId) {
