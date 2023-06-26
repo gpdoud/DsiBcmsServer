@@ -6,12 +6,16 @@ namespace DSI.BcmsServer.Models;
 
 public class Calendar {
 
+    public const string CalendarType_Fulltime = "FT";
+    public const string CalendarType_Parttime = "PT";
+
     public int Id { get; set; } = 0;
     public string CohortName { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public DateTime? StartDate { get; set; } = null;
     public DateTime? EndDate { get; set; } = null;
     public DateTime? GraduationDate { get; set; } = null;
+    public string Type { get; set; } = CalendarType_Fulltime;
     /*
      * A template this defines a generic cohort this
      * and can be referenced when a cohort is created and
@@ -37,6 +41,7 @@ public class Calendar {
             StartDate = this.StartDate,
             EndDate = this.EndDate,
             GraduationDate = this.GraduationDate,
+            Type = this.Type,
             Template = this.Template,
             Active = this.Active,
             Created = Utility.Date.EasternTimeNow,

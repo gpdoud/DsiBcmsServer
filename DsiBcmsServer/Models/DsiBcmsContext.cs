@@ -180,6 +180,7 @@ namespace DSI.BcmsServer.Models {
                 e.Property(x => x.StartDate);
                 e.Property(x => x.EndDate);
                 e.Property(x => x.GraduationDate);
+                e.Property(x => x.Type).HasMaxLength(30);
                 e.Property(x => x.Active).IsRequired();
                 e.Property(x => x.Created);
                 e.Property(x => x.Updated);

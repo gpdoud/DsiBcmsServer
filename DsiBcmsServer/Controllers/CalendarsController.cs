@@ -50,7 +50,7 @@ namespace DSI.BcmsServer.Controllers {
             return newCalendar;
         }
         
-        private async Task CloneCalendarDays(Calendar fromCalendar, Calendar toCalendar, bool isSaTValid = false) {
+        private async Task CloneCalendarDays(Calendar fromCalendar, Calendar toCalendar) {
             var nextDate = (DateTime) toCalendar.StartDate;
             foreach(var day in fromCalendar.CalendarDays) {
                 var newday = day.Clone();
@@ -59,21 +59,35 @@ namespace DSI.BcmsServer.Controllers {
 
                 _context.CalendarDays.Add(newday);
                 await _context.SaveChangesAsync();
-
-                nextDate = GetNextValidDate(nextDate, isSaTValid);
+                nextDate = toCalendar.Type switch {
+                    Calendar.CalendarType_Fulltime => GetNextFullTimeDate(nextDate),
+                    Calendar.CalendarType_Parttime => GetNextPartTimeDate(nextDate),
+                    _ => throw new Exception("Calendar type is not FT or PT!")
+                };
+                    
             }
             return;
         }
 
-        private DateTime GetNextValidDate(DateTime date, bool satValid) {
+        private DateTime GetNextFullTimeDate(DateTime date) {
             var nextDate = date.AddDays(1);
+            // if the next day is a Saturday
             if(nextDate.DayOfWeek == DayOfWeek.Saturday) {
-                if(satValid) {
-                    return nextDate;
-                } 
+                // add 2 more days to make it Monday
                 return nextDate.AddDays(2);
-            } else if(nextDate.DayOfWeek == DayOfWeek.Sunday) {
+            }
+            return nextDate;
+        }        
+        
+        private DateTime GetNextPartTimeDate(DateTime date) {
+            var nextDate = date.AddDays(1);
+            // if the next day is Sunday
+            if(nextDate.DayOfWeek == DayOfWeek.Sunday
+                || nextDate.DayOfWeek == DayOfWeek.Tuesday) {
+                // add 1 more day to make it Monday
                 return nextDate.AddDays(1);
+            } else if(nextDate.DayOfWeek == DayOfWeek.Thursday) {
+                return nextDate.AddDays(2);
             }
             return nextDate;
         }
