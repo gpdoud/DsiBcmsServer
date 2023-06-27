@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DSI.BcmsServer.Models;
-using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
+
 
 namespace DSI.BcmsServer.Controllers {
     [Route("dsi/[controller]")]
@@ -21,7 +20,7 @@ namespace DSI.BcmsServer.Controllers {
 
         // POST: api/calendars/clone/5/2023-08-27
         [HttpPost("clone/{srcCalendarId}/{startDateStr}")]
-        public async Task<ActionResult<Calendar>> CloneCalendar(int srcCalendarId, string startDateStr) {
+        public async Task<ActionResult<Models.Calendar>> CloneCalendar(int srcCalendarId, string startDateStr) {
             if(srcCalendarId == 0 || startDateStr == null) {
                 return BadRequest();
             }
@@ -50,27 +49,73 @@ namespace DSI.BcmsServer.Controllers {
             return newCalendar;
         }
         
-        private async Task CloneCalendarDays(Calendar fromCalendar, Calendar toCalendar) {
+        private async Task CloneCalendarDays(Models.Calendar fromCalendar, Models.Calendar toCalendar) {
+            var noClassDates = await CreateNoClassDictionary();
             var nextDate = (DateTime) toCalendar.StartDate;
             foreach(var day in fromCalendar.CalendarDays) {
                 var newday = day.Clone();
                 newday.CalendarId = toCalendar.Id;
                 newday.Date = nextDate;
 
+                // check if the data is a valid class day
+                // if not, add a NoClassDate then get the next date
+                // while loop in case there are multiple no class days
+                while(IsNoClassDate(newday.Date, noClassDates)) {
+                    await AddNoClassDay(newday.Date, newday.CalendarId);
+                    var aDate = GetNextValidDate(newday.Date, fromCalendar.Type, noClassDates);
+                    newday.Date = aDate;
+                }
+
                 _context.CalendarDays.Add(newday);
                 await _context.SaveChangesAsync();
-                nextDate = toCalendar.Type switch {
-                    Calendar.CalendarType_Fulltime => GetNextFullTimeDate(nextDate),
-                    Calendar.CalendarType_Parttime => GetNextPartTimeDate(nextDate),
-                    _ => throw new Exception("Calendar type is not FT or PT!")
-                };
-                    
+                nextDate = GetNextValidDate(newday.Date, toCalendar.Type, noClassDates);                    
             }
             return;
         }
 
+        private DateTime GetNextValidDate(DateTime prevDate, string type, Dictionary<string, string> noClassDates) {
+            DateTime nextDate;
+            nextDate = type switch {
+                Calendar.CalendarType_Fulltime => GetNextFullTimeDate(prevDate),
+                Calendar.CalendarType_Parttime => GetNextPartTimeDate(prevDate),
+                _ => throw new Exception("Calendar type is not FT or PT!")
+            };
+            return nextDate;
+
+        }
+
+        private bool IsNoClassDate(DateTime dateTime, Dictionary<string, string> noClassDates) {
+            return noClassDates.ContainsKey(dateTime.ToString("M/d/yyyy"));
+        }
+
+        private async Task AddNoClassDay(DateTime date, int calendarId) {
+            var day = new CalendarDay {
+                CalendarId = calendarId,
+                Notes = "HOLIDAY - NO CLASS!",
+                Date = date,
+                DayNbr = 0,
+                WeekNbr = 0,
+                NoClassToday = true,
+                Active = true
+            };
+            _context.CalendarDays.Add(day);
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task<Dictionary<string, string>> CreateNoClassDictionary() {
+            var noClassDates = await _context.Configs.Where(x => x.KeyValue.StartsWith("noclassdate")).ToListAsync();
+            Dictionary<string, string> noClasses = new Dictionary<string, string>();
+            foreach(var date in noClassDates) {
+                var key = date.DataValue;
+                var value = date.KeyValue;
+                noClasses[key] = value;
+            }
+            return noClasses;
+        }
+
         private DateTime GetNextFullTimeDate(DateTime date) {
             var nextDate = date.AddDays(1);
+
             // if the next day is a Saturday
             if(nextDate.DayOfWeek == DayOfWeek.Saturday) {
                 // add 2 more days to make it Monday

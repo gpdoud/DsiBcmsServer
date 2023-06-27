@@ -88,6 +88,9 @@ namespace DSI.BcmsServer.Controllers {
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<Cohort>> PostCohort(Cohort cohort) {
+            if (cohort.CalendarId == 0) {
+                cohort.CalendarId = null;
+            }
             _context.Cohorts.Add(cohort);
             await _context.SaveChangesAsync();
 

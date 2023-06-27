@@ -394,7 +394,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Evaluations");
+                    b.ToTable("Evaluations", (string)null);
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Feedback", b =>
@@ -524,7 +524,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Kbs");
+                    b.ToTable("Kbs", (string)null);
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.KbCategory", b =>
@@ -581,7 +581,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", (string)null);
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Question", b =>
@@ -652,7 +652,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasIndex("EvaluationId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Role", b =>
