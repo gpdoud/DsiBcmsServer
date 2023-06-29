@@ -48,8 +48,39 @@ namespace DSI.BcmsServer.Controllers {
             await _context.SaveChangesAsync();
             return newCalendar;
         }
+
+        private async Task CloneCalendarDays(Calendar fromCalendar, Calendar toCalendar) {
+            // get a list of all the days for not classes from configs 
+            var noClassDates = await CreateNoClassDictionary();
+            // get the starting date from the toCalendar
+            var calDate = (DateTime)toCalendar.StartDate;
+            var idx = 0;
+            while(true) {
+                if (IsNoClassDate(calDate, noClassDates)) {
+                    await AddNoClassDay(calDate, toCalendar.Id);
+                    calDate = GetNextValidDate(calDate, fromCalendar.Type, noClassDates);
+                    continue;
+                }
+                var calDay = fromCalendar.CalendarDays.ElementAt(idx);
+                calDay.CalendarId = toCalendar.Id;
+                calDay.Date = calDate;
+                calDay.Id = 0;
+                _context.CalendarDays.Add(calDay);
+                await _context.SaveChangesAsync();
+                /*
+                 * If the calendar has 65 days, the idx will vary from
+                 * 0 to 64. Once it gets to 65, there are no more days
+                 * to process.
+                 */
+                idx++;
+                if(idx >= fromCalendar.CalendarDays.Count) {
+                    break;
+                }
+                calDate = GetNextValidDate(calDate, toCalendar.Type, noClassDates);
+            }
+        }
         
-        private async Task CloneCalendarDays(Models.Calendar fromCalendar, Models.Calendar toCalendar) {
+        private async Task ACloneCalendarDays(Models.Calendar fromCalendar, Models.Calendar toCalendar) {
             var noClassDates = await CreateNoClassDictionary();
             var nextDate = (DateTime) toCalendar.StartDate;
             foreach(var day in fromCalendar.CalendarDays) {
