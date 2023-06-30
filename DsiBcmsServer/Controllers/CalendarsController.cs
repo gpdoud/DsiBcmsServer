@@ -48,8 +48,67 @@ namespace DSI.BcmsServer.Controllers {
             await _context.SaveChangesAsync();
             return newCalendar;
         }
+
+        private async Task CloneCalendarDays(Calendar fromCalendar, Calendar toCalendar) {
+            // get a list of all the days for not classes from configs 
+            var noClassDates = await CreateNoClassDictionary();
+            // get the starting date from the toCalendar
+            var calDate = (DateTime)toCalendar.StartDate;
+            var idx = 0;
+            var weekNbr = 1;
+            while(true) {
+                /*
+                 * Check whether the calDate is a NO CLASS date. They
+                 * are defined in the CONFIGS table with a key that starts with
+                 * "noclassdate". 
+                 * 
+                 * If so, simply add a NO CLASS date into the calendar,
+                 * then get the next date and start the loop over again.
+                 */
+                if (IsNoClassDate(calDate, noClassDates)) {
+                    await AddNoClassDay(calDate, toCalendar.Id);
+                    calDate = GetNextValidDate(calDate, fromCalendar.Type, noClassDates);
+                    continue;
+                }
+                /*
+                 * If we get here, the date is a class date. Read the next
+                 * day from the source calendar using idx as an index
+                 * into the collection of days from the source calendar.
+                 */
+                var fromDay = fromCalendar.CalendarDays.ElementAt(idx);
+                /*
+                 * Clone the day then change the date and the calendar id
+                 * it is attached to.
+                 */
+                var calDay = fromDay.Clone();
+                calDay.CalendarId = toCalendar.Id;
+                calDay.Date = calDate;
+                calDay.WeekNbr = weekNbr;
+                // Add the new day to the calendar
+                _context.CalendarDays.Add(calDay);
+                await _context.SaveChangesAsync();
+                /*
+                 * If the calendar has 65 days, the idx will vary from
+                 * 0 to 64. Once it gets to 65, there are no more days
+                 * to process. When idx is incremented to the same
+                 * number of days, we've processed all the days from
+                 * the old calendar and the loop is stopped because we're done.
+                 */
+                idx++;
+                if(idx >= fromCalendar.CalendarDays.Count) {
+                    break;
+                }
+                /*
+                 * If there are more days to copy, get the next date
+                 */
+                calDate = GetNextValidDate(calDate, toCalendar.Type, noClassDates);
+                if(IsMonday(calDate)) {
+                    weekNbr++;
+                }
+            }
+        }
         
-        private async Task CloneCalendarDays(Models.Calendar fromCalendar, Models.Calendar toCalendar) {
+        private async Task ACloneCalendarDays(Models.Calendar fromCalendar, Models.Calendar toCalendar) {
             var noClassDates = await CreateNoClassDictionary();
             var nextDate = (DateTime) toCalendar.StartDate;
             foreach(var day in fromCalendar.CalendarDays) {
@@ -73,6 +132,10 @@ namespace DSI.BcmsServer.Controllers {
             return;
         }
 
+        private bool IsMonday(DateTime date) {
+            return date.DayOfWeek == DayOfWeek.Monday;
+        }
+
         private DateTime GetNextValidDate(DateTime prevDate, string type, Dictionary<string, string> noClassDates) {
             DateTime nextDate;
             nextDate = type switch {
@@ -91,7 +154,7 @@ namespace DSI.BcmsServer.Controllers {
         private async Task AddNoClassDay(DateTime date, int calendarId) {
             var day = new CalendarDay {
                 CalendarId = calendarId,
-                Notes = "HOLIDAY - NO CLASS!",
+                Topic = "NO CLASS!",
                 Date = date,
                 DayNbr = 0,
                 WeekNbr = 0,
