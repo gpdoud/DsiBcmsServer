@@ -55,6 +55,7 @@ namespace DSI.BcmsServer.Controllers {
             // get the starting date from the toCalendar
             var calDate = (DateTime)toCalendar.StartDate;
             var idx = 0;
+            var weekNbr = 1;
             while(true) {
                 /*
                  * Check whether the calDate is a NO CLASS date. They
@@ -82,6 +83,7 @@ namespace DSI.BcmsServer.Controllers {
                 var calDay = fromDay.Clone();
                 calDay.CalendarId = toCalendar.Id;
                 calDay.Date = calDate;
+                calDay.WeekNbr = weekNbr;
                 // Add the new day to the calendar
                 _context.CalendarDays.Add(calDay);
                 await _context.SaveChangesAsync();
@@ -100,6 +102,9 @@ namespace DSI.BcmsServer.Controllers {
                  * If there are more days to copy, get the next date
                  */
                 calDate = GetNextValidDate(calDate, toCalendar.Type, noClassDates);
+                if(IsMonday(calDate)) {
+                    weekNbr++;
+                }
             }
         }
         
@@ -127,6 +132,10 @@ namespace DSI.BcmsServer.Controllers {
             return;
         }
 
+        private bool IsMonday(DateTime date) {
+            return date.DayOfWeek == DayOfWeek.Monday;
+        }
+
         private DateTime GetNextValidDate(DateTime prevDate, string type, Dictionary<string, string> noClassDates) {
             DateTime nextDate;
             nextDate = type switch {
@@ -145,7 +154,7 @@ namespace DSI.BcmsServer.Controllers {
         private async Task AddNoClassDay(DateTime date, int calendarId) {
             var day = new CalendarDay {
                 CalendarId = calendarId,
-                Notes = "HOLIDAY - NO CLASS!",
+                Topic = "NO CLASS!",
                 Date = date,
                 DayNbr = 0,
                 WeekNbr = 0,
