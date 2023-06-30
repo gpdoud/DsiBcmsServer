@@ -56,26 +56,49 @@ namespace DSI.BcmsServer.Controllers {
             var calDate = (DateTime)toCalendar.StartDate;
             var idx = 0;
             while(true) {
+                /*
+                 * Check whether the calDate is a NO CLASS date. They
+                 * are defined in the CONFIGS table with a key that starts with
+                 * "noclassdate". 
+                 * 
+                 * If so, simply add a NO CLASS date into the calendar,
+                 * then get the next date and start the loop over again.
+                 */
                 if (IsNoClassDate(calDate, noClassDates)) {
                     await AddNoClassDay(calDate, toCalendar.Id);
                     calDate = GetNextValidDate(calDate, fromCalendar.Type, noClassDates);
                     continue;
                 }
+                /*
+                 * If we get here, the date is a class date. Read the next
+                 * day from the source calendar using idx as an index
+                 * into the collection of days from the source calendar.
+                 */
                 var fromDay = fromCalendar.CalendarDays.ElementAt(idx);
+                /*
+                 * Clone the day then change the date and the calendar id
+                 * it is attached to.
+                 */
                 var calDay = fromDay.Clone();
                 calDay.CalendarId = toCalendar.Id;
                 calDay.Date = calDate;
+                // Add the new day to the calendar
                 _context.CalendarDays.Add(calDay);
                 await _context.SaveChangesAsync();
                 /*
                  * If the calendar has 65 days, the idx will vary from
                  * 0 to 64. Once it gets to 65, there are no more days
-                 * to process.
+                 * to process. When idx is incremented to the same
+                 * number of days, we've processed all the days from
+                 * the old calendar and the loop is stopped because we're done.
                  */
                 idx++;
                 if(idx >= fromCalendar.CalendarDays.Count) {
                     break;
                 }
+                /*
+                 * If there are more days to copy, get the next date
+                 */
                 calDate = GetNextValidDate(calDate, toCalendar.Type, noClassDates);
             }
         }
