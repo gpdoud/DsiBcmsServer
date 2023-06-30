@@ -61,10 +61,10 @@ namespace DSI.BcmsServer.Controllers {
                     calDate = GetNextValidDate(calDate, fromCalendar.Type, noClassDates);
                     continue;
                 }
-                var calDay = fromCalendar.CalendarDays.ElementAt(idx);
+                var fromDay = fromCalendar.CalendarDays.ElementAt(idx);
+                var calDay = fromDay.Clone();
                 calDay.CalendarId = toCalendar.Id;
                 calDay.Date = calDate;
-                calDay.Id = 0;
                 _context.CalendarDays.Add(calDay);
                 await _context.SaveChangesAsync();
                 /*
