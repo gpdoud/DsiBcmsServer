@@ -230,8 +230,17 @@ namespace DSI.BcmsServer.Controllers {
         [HttpGet("{id}")]
         public async Task<ActionResult<Calendar>> GetCalendar(int id) {
             var calendar = await _context.Calendars
-                                            .Include(x => x.CalendarDays)
                                             .SingleOrDefaultAsync(x => x.Id == id);
+            /*
+             * Filling the calendar days separately is so they can be sorted by the 
+             * date. This allows moving days up and down and keeps track of the 
+             * first and last days which the first day cannot be moved up and the
+             * last day cannot be moved down.
+             */
+            calendar.CalendarDays = await _context.CalendarDays
+                                                    .Where(x => x.CalendarId == id)
+                                                    .OrderBy(x => x.Date)
+                                                    .ToListAsync();
 
             if (calendar == null) {
                 return NotFound();
