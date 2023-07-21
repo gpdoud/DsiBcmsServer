@@ -13,6 +13,10 @@
     <DefineConstants>TRACE;PRODBKUPDB</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Azure|AnyCPU'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Migrations\20200329210414_add-evaluation-question.cs" />
     <Compile Remove="Migrations\20200329210414_add-evaluation-question.Designer.cs" />

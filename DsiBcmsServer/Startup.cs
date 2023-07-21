@@ -70,15 +70,15 @@ namespace DsiBcmsServer {
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseHttpsRedirection();
 
             app.UseCors(DefaultCorsPolicy);
 
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
