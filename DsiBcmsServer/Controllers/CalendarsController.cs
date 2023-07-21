@@ -21,20 +21,20 @@ namespace DSI.BcmsServer.Controllers {
         // POST: api/calendars/clone/5/2023-08-27
         [HttpPost("clone/{srcCalendarId}/{startDateStr}")]
         public async Task<ActionResult<Models.Calendar>> CloneCalendar(int srcCalendarId, string startDateStr) {
-            if(srcCalendarId == 0 || startDateStr == null) {
+            if (srcCalendarId == 0 || startDateStr == null) {
                 return BadRequest();
             }
             var srcCalendar = await _context.Calendars
                                                 .Include(x => x.CalendarDays)
                                                 .SingleOrDefaultAsync(x => x.Id == srcCalendarId);
-            if(srcCalendar == null) {
+            if (srcCalendar == null) {
                 return NotFound();
             }
             DateTime startDate;
             if (!DateTime.TryParse(startDateStr, out startDate)) {
                 throw new ArgumentException("StartDate cannot be parsed!");
             }
- 
+
             var newCalendar = await CloneCalendar(srcCalendar, startDate);
             await CloneCalendarDays(srcCalendar, newCalendar);
             return newCalendar;
@@ -56,7 +56,7 @@ namespace DSI.BcmsServer.Controllers {
             var calDate = (DateTime)toCalendar.StartDate;
             var idx = 0;
             var weekNbr = 1;
-            while(true) {
+            while (true) {
                 /*
                  * Check whether the calDate is a NO CLASS date. They
                  * are defined in the CONFIGS table with a key that starts with
@@ -95,23 +95,23 @@ namespace DSI.BcmsServer.Controllers {
                  * the old calendar and the loop is stopped because we're done.
                  */
                 idx++;
-                if(idx >= fromCalendar.CalendarDays.Count) {
+                if (idx >= fromCalendar.CalendarDays.Count) {
                     break;
                 }
                 /*
                  * If there are more days to copy, get the next date
                  */
                 calDate = GetNextValidDate(calDate, toCalendar.Type, noClassDates);
-                if(IsMonday(calDate)) {
+                if (IsMonday(calDate)) {
                     weekNbr++;
                 }
             }
         }
-        
+
         private async Task ACloneCalendarDays(Models.Calendar fromCalendar, Models.Calendar toCalendar) {
             var noClassDates = await CreateNoClassDictionary();
-            var nextDate = (DateTime) toCalendar.StartDate;
-            foreach(var day in fromCalendar.CalendarDays) {
+            var nextDate = (DateTime)toCalendar.StartDate;
+            foreach (var day in fromCalendar.CalendarDays) {
                 var newday = day.Clone();
                 newday.CalendarId = toCalendar.Id;
                 newday.Date = nextDate;
@@ -119,7 +119,7 @@ namespace DSI.BcmsServer.Controllers {
                 // check if the data is a valid class day
                 // if not, add a NoClassDate then get the next date
                 // while loop in case there are multiple no class days
-                while(IsNoClassDate(newday.Date, noClassDates)) {
+                while (IsNoClassDate(newday.Date, noClassDates)) {
                     await AddNoClassDay(newday.Date, newday.CalendarId);
                     var aDate = GetNextValidDate(newday.Date, fromCalendar.Type, noClassDates);
                     newday.Date = aDate;
@@ -127,7 +127,7 @@ namespace DSI.BcmsServer.Controllers {
 
                 _context.CalendarDays.Add(newday);
                 await _context.SaveChangesAsync();
-                nextDate = GetNextValidDate(newday.Date, toCalendar.Type, noClassDates);                    
+                nextDate = GetNextValidDate(newday.Date, toCalendar.Type, noClassDates);
             }
             return;
         }
@@ -168,7 +168,7 @@ namespace DSI.BcmsServer.Controllers {
         private async Task<Dictionary<string, string>> CreateNoClassDictionary() {
             var noClassDates = await _context.Configs.Where(x => x.KeyValue.StartsWith("noclassdate")).ToListAsync();
             Dictionary<string, string> noClasses = new Dictionary<string, string>();
-            foreach(var date in noClassDates) {
+            foreach (var date in noClassDates) {
                 var key = date.DataValue;
                 var value = date.KeyValue;
                 noClasses[key] = value;
@@ -180,21 +180,21 @@ namespace DSI.BcmsServer.Controllers {
             var nextDate = date.AddDays(1);
 
             // if the next day is a Saturday
-            if(nextDate.DayOfWeek == DayOfWeek.Saturday) {
+            if (nextDate.DayOfWeek == DayOfWeek.Saturday) {
                 // add 2 more days to make it Monday
                 return nextDate.AddDays(2);
             }
             return nextDate;
-        }        
-        
+        }
+
         private DateTime GetNextPartTimeDate(DateTime date) {
             var nextDate = date.AddDays(1);
             // if the next day is Sunday
-            if(nextDate.DayOfWeek == DayOfWeek.Sunday
+            if (nextDate.DayOfWeek == DayOfWeek.Sunday
                 || nextDate.DayOfWeek == DayOfWeek.Tuesday) {
                 // add 1 more day to make it Monday
                 return nextDate.AddDays(1);
-            } else if(nextDate.DayOfWeek == DayOfWeek.Thursday) {
+            } else if (nextDate.DayOfWeek == DayOfWeek.Thursday) {
                 return nextDate.AddDays(2);
             }
             return nextDate;
@@ -212,7 +212,7 @@ namespace DSI.BcmsServer.Controllers {
                                on c.CalendarId equals cal.Id
                            where u.Id == userId
                            select cal;
-            
+
             return await calendar.FirstOrDefaultAsync();
 
         }
@@ -277,9 +277,9 @@ namespace DSI.BcmsServer.Controllers {
         public async Task<IActionResult> UpdateCalendar(int id, Calendar calendar) {
             return await PutCalendar(id, calendar);
         }
-            // POST: api/Calendars
-            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-            [HttpPost]
+        // POST: api/Calendars
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
         public async Task<ActionResult<Calendar>> PostCalendar(Calendar calendar) {
             calendar.Created = Utility.Date.EasternTimeNow;
             _context.Calendars.Add(calendar);
@@ -303,7 +303,7 @@ namespace DSI.BcmsServer.Controllers {
         }
 
         [HttpPost("delete/{id}")]
-        public async Task<IActionResult> DeleteCalendar(int id, Calendar calendar) {
+        public async Task<IActionResult> RemoveCalendar(int id) {
             return await DeleteCalendar(id);
         }
 

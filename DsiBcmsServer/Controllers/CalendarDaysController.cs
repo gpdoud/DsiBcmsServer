@@ -61,9 +61,14 @@ namespace DSI.BcmsServer.Controllers {
             return NoContent();
         }
 
-        // POST: api/CalendarDays
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> UpdateCalendarDay(int id, CalendarDay calendarDay) {
+            return await PutCalendarDay(id, calendarDay);  
+        }
+
+            // POST: api/CalendarDays
+            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+            [HttpPost]
         public async Task<ActionResult<CalendarDay>> PostCalendarDay(CalendarDay calendarDay) {
             calendarDay.Created = Utility.Date.EasternTimeNow;
             _context.CalendarDays.Add(calendarDay);
@@ -86,7 +91,12 @@ namespace DSI.BcmsServer.Controllers {
             return NoContent();
         }
 
-        private bool CalendarDayExists(int id) {
+        [HttpPost("delete/{id}")]
+        public async Task<IActionResult> RemoveCalendarDay(int id) {
+            return await DeleteCalendarDay(id);
+        }
+
+            private bool CalendarDayExists(int id) {
             return _context.CalendarDays.Any(e => e.Id == id);
         }
     }
