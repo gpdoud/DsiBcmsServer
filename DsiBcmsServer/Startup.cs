@@ -31,7 +31,8 @@ namespace DsiBcmsServer {
             "http://localhost", "https://localhost", // jQuery
             "http://localhost:4200", "https://localhost:4200", // Angular
             "http://localhost:5500", "https://localhost:5500", // Live Server
-            "http://doudsystems.com", "https://doudsystems.com"
+            "http://doudsystems.com", "https://doudsystems.com",
+            "https://bcmsng.azurewebsites.net" // Azure
         };
         private string[] AllowedMethods = { "GET", "POST", "PUT", "DELETE" };
 
