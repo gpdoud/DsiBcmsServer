@@ -4,7 +4,7 @@
     <TargetFramework>net6</TargetFramework>
     <AssemblyName>DSI.BcmsServer</AssemblyName>
     <RootNamespace>DSI.BcmsServer</RootNamespace>
-    <Configurations>Debug;Release;DebugProd;DevProdBkup;Stage;Ripper;Azure</Configurations>
+    <Configurations>DevProdBkup;Azure;Docker;Debug;Release;Stage;Ripper;DebugProd</Configurations>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
     <UserSecretsId>117478f0-5f00-4343-ae0e-76d1003436aa</UserSecretsId>
   </PropertyGroup>
@@ -13,6 +13,25 @@
     <DefineConstants>TRACE;PRODBKUPDB</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'DsiBcmsServer' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Azure|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Docker|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType></DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Docker</OutputPath>
+    <DefineConstants></DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <AssemblyName>DsiBcmsServer</AssemblyName>
+    <IntermediateOutputPath>obj\Docker</IntermediateOutputPath>
+    <NoWarn></NoWarn>
+    <NoStdLib>false</NoStdLib>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Stage|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ripper|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Docker|AnyCPU' " />
   <ItemGroup>
     <Compile Remove="Migrations\20200329210414_add-evaluation-question.cs" />
     <Compile Remove="Migrations\20200329210414_add-evaluation-question.Designer.cs" />
@@ -33,13 +52,13 @@
   <ItemGroup>
     <PackageReference Include="microsoft.entityframeworkcore.proxies" Version="6.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.7" />
-    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="6.0.13" />
-    <PackageReference Include="microsoft.entityframeworkcore.tools" Version="6.0.13">
+    <PackageReference Include="microsoft.entityframeworkcore.sqlserver" Version="6.0.18" />
+    <PackageReference Include="microsoft.entityframeworkcore.tools" Version="6.0.18">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.14" />
     <PackageReference Include="nlog.web.aspnetcore" Version="5.0.0" />
   </ItemGroup>
 

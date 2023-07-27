@@ -4,6 +4,7 @@ using DSI.BcmsServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DSI.BcmsServer.Migrations
 {
     [DbContext(typeof(DsiBcmsContext))]
-    partial class DsiBcmsContextModelSnapshot : ModelSnapshot
+    [Migration("20230619163639_add calendar calendarDay fk in cohort to calendar")]
+    partial class addcalendarcalendarDayfkincohorttocalendar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.18")
+                .HasAnnotation("ProductVersion", "6.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -111,9 +113,6 @@ namespace DSI.BcmsServer.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("CohortName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
@@ -129,13 +128,6 @@ namespace DSI.BcmsServer.Migrations
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("Template")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Type")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime2");
@@ -156,9 +148,8 @@ namespace DSI.BcmsServer.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<string>("AssessmentToday")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<bool>("AssessmentToday")
+                        .HasColumnType("bit");
 
                     b.Property<int>("CalendarId")
                         .HasColumnType("int");
@@ -394,7 +385,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Evaluations", (string)null);
+                    b.ToTable("Evaluations");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Feedback", b =>
@@ -524,7 +515,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Kbs", (string)null);
+                    b.ToTable("Kbs");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.KbCategory", b =>
@@ -581,7 +572,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs", (string)null);
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Question", b =>
@@ -652,7 +643,7 @@ namespace DSI.BcmsServer.Migrations
 
                     b.HasIndex("EvaluationId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Role", b =>
@@ -795,7 +786,7 @@ namespace DSI.BcmsServer.Migrations
                     b.HasOne("DSI.BcmsServer.Models.Calendar", "Calendar")
                         .WithMany("CalendarDays")
                         .HasForeignKey("CalendarId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Calendar");
@@ -804,7 +795,7 @@ namespace DSI.BcmsServer.Migrations
             modelBuilder.Entity("DSI.BcmsServer.Models.Cohort", b =>
                 {
                     b.HasOne("DSI.BcmsServer.Models.Calendar", "Calendar")
-                        .WithMany()
+                        .WithMany("Cohorts")
                         .HasForeignKey("CalendarId");
 
                     b.HasOne("DSI.BcmsServer.Models.User", null)
@@ -937,6 +928,8 @@ namespace DSI.BcmsServer.Migrations
             modelBuilder.Entity("DSI.BcmsServer.Models.Calendar", b =>
                 {
                     b.Navigation("CalendarDays");
+
+                    b.Navigation("Cohorts");
                 });
 
             modelBuilder.Entity("DSI.BcmsServer.Models.Cohort", b =>

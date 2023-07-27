@@ -40,17 +40,16 @@ namespace DsiBcmsServer {
             var connStrKey = "ProdDb";
 #if DEBUG
             connStrKey = "DevDb";
-#endif
-#if DEVPRODBKUP
+#elif DEVPRODBKUP
             // this is a recent copy of the production database
             // it can be used to diagnose bugs in the production code
             connStrKey = "DevProdDb";
-#endif
-#if AZURE
+#elif AZURE
             connStrKey = "AzureDb";
-#endif
-#if RIPPER
+#elif RIPPER
             connStrKey = "RipperDb";
+#elif DOCKER
+            connStrKey = "DockerDb";
 #endif
             services.AddDbContext<DsiBcmsContext>(x => {
                 x.UseLazyLoadingProxies();

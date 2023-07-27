@@ -14,6 +14,10 @@ namespace DSI.BcmsServer.Models {
         public DateTime? EndDate { get; set; }
         public DateTime? DemoDay { get; set; }
         public int Capacity { get; set; }
+        
+        public int? CalendarId { get; set; }
+        [JsonIgnore]
+        public virtual Calendar? Calendar { get; set; } = null;
 
         public bool Active { get; set; } = true;
         public DateTime Created { get; set; } = DateTime.Now;

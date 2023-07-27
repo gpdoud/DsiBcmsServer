@@ -26,7 +26,9 @@ namespace DSI.BcmsServer.Controllers {
         // GET: api/Cohorts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cohort>> GetCohort(int id) {
-            var cohort = await _context.Cohorts.FindAsync(id);
+            var cohort = await _context.Cohorts
+                                        .Include(x => x.Calendar)
+                                        .SingleOrDefaultAsync(x => x.Id == id);
 
             if(cohort == null) {
                 return NotFound();
@@ -62,7 +64,9 @@ namespace DSI.BcmsServer.Controllers {
             if(id != cohort.Id) {
                 return BadRequest();
             }
-
+            if(cohort.CalendarId == 0) {
+                cohort.CalendarId = null;
+            }
             cohort.Updated = DateTime.Now;
             _context.Entry(cohort).State = EntityState.Modified;
 
@@ -84,6 +88,9 @@ namespace DSI.BcmsServer.Controllers {
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<Cohort>> PostCohort(Cohort cohort) {
+            if (cohort.CalendarId == 0) {
+                cohort.CalendarId = null;
+            }
             _context.Cohorts.Add(cohort);
             await _context.SaveChangesAsync();
 
