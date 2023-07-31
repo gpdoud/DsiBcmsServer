@@ -203,7 +203,7 @@ namespace DSI.BcmsServer.Controllers {
         // GET: api/Calendars/userId
         [HttpGet("student/{userId}")]
         public async Task<ActionResult<Calendar>> GetCalendarForStudentId(int userId) {
-            var calendar = from u in _context.Users
+            var calendar = (from u in _context.Users
                            join e in _context.Enrollments
                                on u.Id equals e.UserId
                            join c in _context.Cohorts
@@ -211,10 +211,9 @@ namespace DSI.BcmsServer.Controllers {
                            join cal in _context.Calendars
                                on c.CalendarId equals cal.Id
                            where u.Id == userId
-                           select cal;
+                           select cal).FirstOrDefaultAsync();
 
-            return await calendar.FirstOrDefaultAsync();
-
+            return await GetCalendar((await calendar).Id);
         }
 
 
